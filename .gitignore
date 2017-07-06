@@ -45,7 +45,7 @@ ehthumbs.db
 [Dd]esktop.ini
 **/Library/ShaderCache/
 **/Library/metadata/
-**/Library/metadata/
+**/Library/metadata/*
 
 # Unity3D generated meta files
 *.pidb.meta
