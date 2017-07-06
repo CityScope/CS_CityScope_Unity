@@ -4,8 +4,9 @@
 CSharpScopeTemplateProject/[Tt]emp
 CSharpScopeTemplateProject/[Oo]bj
 CSharpScopeTemplateProject/[Bb]uild
-**/[Bb]uilds
-**/[Ll]ibrary
+CSharpScopeTemplateProject/[Bb]uilds
+CSharpScopeTemplateProject/[Ll]ibrary
+**/Library
 sysinfo.txt
 *.stackdump
 /Assets/AssetStoreTools*
@@ -44,7 +45,7 @@ ehthumbs.db
 [Dd]esktop.ini
 **/Library/ShaderCache/
 **/Library/metadata/
-/Library/metadata/
+**/Library/metadata/
 
 # Unity3D generated meta files
 *.pidb.meta
