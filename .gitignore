@@ -1,11 +1,11 @@
 # =============== #
 # Unity generated #
 # =============== #
-CSharpScopeTemplateProject/[Tt]emp/
-CSharpScopeTemplateProject/[Oo]bj/
+CSharpScopeTemplateProject/[Tt]emp
+CSharpScopeTemplateProject/[Oo]bj
 CSharpScopeTemplateProject/[Bb]uild
-**/[Bb]uilds/
-**/[Ll]ibrary/
+**/[Bb]uilds
+**/[Ll]ibrary
 sysinfo.txt
 *.stackdump
 /Assets/AssetStoreTools*
