@@ -4,56 +4,10 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Linq;
 
-/// <summary> 
-/// class start 
-/// </summary>
-
-[System.Serializable]  // have to have this in every JSON class!
-public class Grid
-{
-    public int type;
-    public int x;
-    public int y;
-    public int rot;
-}
-
-[System.Serializable] // have to have this in every JSON class!
-public class Objects
-{
-    public float slider1;
-    public int toggle1;
-    public int toggle2;
-    public int toggle3;
-    public int toggle4;
-    public int dockID;
-    public int dockRotation;
-    public int IDMax;
-    public List<int> density;
-    public int pop_young;
-    public int pop_mid;
-    public int pop_old;
-}
-
-[System.Serializable]// have to have this in every JSON class!
-public class Table
-{
-    public List<Grid> grid;
-    public Objects objects;
-    public string id;
-    public long timestamp;
-
-    public static Table CreateFromJSON(string jsonString)
-    { // static function that returns Table which holds Class objects 
-        return JsonUtility.FromJson<Table>(jsonString);
-    }
-}
-
-/// <summary> class end </summary>
-
 public class cityIO : MonoBehaviour
 {
+    // Tables data are here: https://cityio.media.mit.edu/table/cityio_meta
     private string _urlStart = "https://cityio.media.mit.edu/api/table/citymatrix";
-    // Table data: https://cityio.media.mit.edu/table/cityio_meta
     private string _urlLocalHost = "http://localhost:8080//table/citymatrix";
     public bool _onlineServer = true;
     public string _tableAddUnderscore = "";
@@ -61,7 +15,6 @@ public class cityIO : MonoBehaviour
     public int _delayWWW;
     private WWW _www;
     private string _oldText;
-    //this looks for changes
     public bool _newCityioDataFlag = false;
     public int _tableX;
     public int _tableY;
@@ -74,16 +27,9 @@ public class cityIO : MonoBehaviour
     public GameObject _gridHolder;
     public GameObject textMeshPrefab;
     public Color[] colors;
-    public TextAsset _asciiMasks;
-    //private List<int> _masksList = new List<int>();
-    /* Vars for searching in table mask list */
-    // private int _intreactionMask = 1;
 
     IEnumerator Start()
     {
-        /* To be removed upon Json unification */
-        //_masksList = AsciiParser.AsciiParserMethod(_asciiMasks); // use this to get only intractable active 
-        // print (_masksList.Count());
         while (true)
         {
             if (_onlineServer == true)
