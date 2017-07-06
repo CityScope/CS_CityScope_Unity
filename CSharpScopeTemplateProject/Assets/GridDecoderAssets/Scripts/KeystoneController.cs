@@ -235,12 +235,15 @@ public class KeystoneController : MonoBehaviour
 
 		string dataAsJson = JsonParser.loadJSON (_settingsFileName, _debug);
 
-		if (dataAsJson.Length == 0)
+		if (dataAsJson.Length == 0) {
 			settings = new KeystoneSettings (_vertices);
+			vertices = settings.vertices;
+		}
 		else {
 			settings = JsonUtility.FromJson<KeystoneSettings> (dataAsJson);
 			vertices = settings.vertices;
 		}
+
 		SetupMesh ();
 
 		return true;
