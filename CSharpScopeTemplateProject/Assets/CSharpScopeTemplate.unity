@@ -2051,8 +2051,8 @@ MonoBehaviour:
   _tableAddUnderscore: _volpe
   _delayWWW: 1
   _newCityioDataFlag: 0
-  _tableX: 16
-  _tableY: 16
+  _tableX: 20
+  _tableY: 20
   _cellWorldSize: 22
   cellShrink: 0.95
   floorHeight: 4

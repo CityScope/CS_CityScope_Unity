@@ -221,8 +221,6 @@ public class Scanners : MonoBehaviour
 			colorClassifier.SortColors (allColors);
 	}
 
-
-
 	/// <summary>
 	/// Prints the ID matrix.
 	/// </summary>
@@ -246,7 +244,7 @@ public class Scanners : MonoBehaviour
 		Debug.Log (matrix);
 	}
 
-	public static int[,] GetCurrentIds() {
+	public int[,] GetCurrentIds() {
 		return currentIds;
 	}
 

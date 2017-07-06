@@ -50,7 +50,12 @@ public class Table
 
 	public static Table CreateFromDecoder()
 	{
-		int[,] currIds = Scanners.GetCurrentIds ();
+		int[,] currIds = Scanners.currentIds;
+
+		if (currIds == null) {
+			return new Table ();
+		}
+		
 		Table table = new Table ();
 
 		table.grid = new List<Grid> ();
@@ -61,13 +66,19 @@ public class Table
 		for (int i = 0; i < currIds.GetLength(0); i++) {
 			for (int j = 0; j < currIds.GetLength(1); j++) {
 				Grid currGrid = new Grid ();
-				currGrid.type = currIds [i, j];
+			//	currGrid.type = currIds [i, j];
+				currGrid.type = 1;
 				currGrid.x = i;
 				currGrid.y = j;
 				currGrid.rot = 180;
 				table.grid.Add (currGrid);
+				Debug.Log ("TYPE = " + currGrid.type + " ");
 			}
 		}
+			
+		table.objects = new Objects ();
+		//table.objects.density = new List<int> (new int[] {1, 1, 1, 5, 2, 1});
+		Debug.Log (table.objects.density);
 
 		return table;
 	}

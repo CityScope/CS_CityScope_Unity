@@ -70,10 +70,14 @@ public class cityIO : MonoBehaviour
 			} else { // for app data
 				_table = Table.CreateFromDecoder();
 				_newCityioDataFlag = true;
-				drawTable ();
+				if (_table.grid != null) {
+					Debug.Log ("Drawing table");
+					drawTable ();
+				}
 			}
         }
     }
+
     void drawTable()
     {
         /*  strat update table with clean grid */
@@ -81,7 +85,6 @@ public class cityIO : MonoBehaviour
         {
             GameObject.Destroy(child.gameObject);
         }
-
         for (int i = 0; i < _table.grid.Count; i++) // loop through list of all cells grid objects 
         {
             /* make the grid cells in generic form */
