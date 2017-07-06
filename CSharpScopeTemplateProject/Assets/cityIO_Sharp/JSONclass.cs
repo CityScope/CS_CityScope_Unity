@@ -53,20 +53,21 @@ public class Table
 		int[,] currIds = Scanners.GetCurrentIds ();
 		Table table = new Table ();
 
+		table.grid = new List<Grid> ();
+
 		if ((int)(currIds.Length) <= 1) {
 			Debug.Log ("Empty dictionary.");
 		}
-//		for (int i = 0; i < currIds.GetLength(0); i++) {
-//			for (int j = 0; j < currIds.GetLength(1); j++) {
-//				if (currIds [i, j] >= 0)
-//					matrix += " ";
-//				matrix += currIds [i, j] + "";
-//				if (currIds [i, j] >= 0)
-//					matrix += " ";
-//			}
-//			matrix += "\n";
-//		}
-//		Debug.Log (matrix);
+		for (int i = 0; i < currIds.GetLength(0); i++) {
+			for (int j = 0; j < currIds.GetLength(1); j++) {
+				Grid currGrid = new Grid ();
+				currGrid.type = currIds [i, j];
+				currGrid.x = i;
+				currGrid.y = j;
+				currGrid.rot = 180;
+				table.grid.Add (currGrid);
+			}
+		}
 
 		return table;
 	}
