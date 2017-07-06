@@ -47,6 +47,29 @@ public class Table
     { // static function that returns Table which holds Class objects 
         return JsonUtility.FromJson<Table>(jsonString);
     }
+
+	public static Table CreateFromDecoder()
+	{
+		int[,] currIds = Scanners.GetCurrentIds ();
+		Table table = new Table ();
+
+		if ((int)(currIds.Length) <= 1) {
+			Debug.Log ("Empty dictionary.");
+		}
+//		for (int i = 0; i < currIds.GetLength(0); i++) {
+//			for (int j = 0; j < currIds.GetLength(1); j++) {
+//				if (currIds [i, j] >= 0)
+//					matrix += " ";
+//				matrix += currIds [i, j] + "";
+//				if (currIds [i, j] >= 0)
+//					matrix += " ";
+//			}
+//			matrix += "\n";
+//		}
+//		Debug.Log (matrix);
+
+		return table;
+	}
 }
 
 /// <summary> class end </summary>
