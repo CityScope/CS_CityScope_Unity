@@ -1,11 +1,11 @@
 # =============== #
 # Unity generated #
 # =============== #
-[Tt]emp/
-[Oo]bj/
-[Bb]uild
-/[Bb]uilds/
-/[Ll]ibrary/
+CSharpScopeTemplateProject/[Tt]emp/
+CSharpScopeTemplateProject/[Oo]bj/
+CSharpScopeTemplateProject/[Bb]uild
+**/[Bb]uilds/
+**/[Ll]ibrary/
 sysinfo.txt
 *.stackdump
 /Assets/AssetStoreTools*
@@ -40,6 +40,7 @@ sysinfo.txt
 Icon?
 ehthumbs.db
 [Tt]humbs.db
+
 [Dd]esktop.ini
 **/Library/ShaderCache/
 **/Library/metadata/
