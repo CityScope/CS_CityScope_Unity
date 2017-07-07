@@ -39,6 +39,8 @@ public class cityIO : MonoBehaviour
     {
 
 		_table = new Table ();
+		_table.objects = new Objects ();
+		_table.objects.density = new List<int> (new int[] {5, 8, 20, 0, 10, 3});
 
         while (true)
         {
@@ -55,13 +57,12 @@ public class cityIO : MonoBehaviour
 
 			// For JSON parsing
 			if (_dataSource != DataSource.INTERNAL) {
-				
 				WWW _www = new WWW (_url);
 				yield return _www;
 				if (!string.IsNullOrEmpty (_www.error)) {
 					Debug.Log (_www.error); // use this for transfering to local server 
 				} else {
-					if (_www.text != _oldText) {
+					//if (_www.text != _oldText) {
 						_oldText = _www.text; //new data has arrived from server 
 						_table = Table.CreateFromJSON (_www.text); // get parsed JSON into Cells variable --- MUST BE BEFORE CALLING ANYTHING FROM CELLS!!
 						_newCityioDataFlag = true;
@@ -70,12 +71,12 @@ public class cityIO : MonoBehaviour
 						System.DateTime epochStart = new System.DateTime (1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
 						var lastUpdateTime = epochStart.AddSeconds (System.Math.Round (_table.timestamp / 1000d)).ToLocalTime ();
 						print ("CityIO new data has arrived." + '\n' + "JSON was created at: " + lastUpdateTime + '\n' + _www.text);
-					}
+					//}
 				}
 			} else { // for app data
-				Table.CreateFromDecoder(ref _table);
+				bool update = Table.CreateFromDecoder(ref _table);
 				_newCityioDataFlag = true;
-				if (_table.grid != null) {
+				if (_table.grid != null && update) {
 					drawTable ();
 				}
 			}
