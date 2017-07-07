@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44826323, g: 0.49828815, b: 0.57558924, a: 1}
+  m_IndirectSpecularColor: {r: 0.4481508, g: 0.4981758, b: 0.5754946, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -180,7 +180,6 @@ Material:
   m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
@@ -1248,7 +1247,7 @@ MonoBehaviour:
   _showRays: 0
   _debug: 1
   _isCalibrating: 1
-  _colorSamplerParent: {fileID: 11045109}
+  _colorSamplerParent: {fileID: 0}
   _colorSettingsFileName: _sampleColorSettings.json
 --- !u!114 &1489870784
 MonoBehaviour:
@@ -1263,15 +1262,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _vertices:
-  - {x: -0.125, y: -0.41, z: 0}
-  - {x: -0.3550001, y: 0.3050002, z: 0}
-  - {x: 0.6149994, y: 0.3549998, z: 0}
-  - {x: 0.3900001, y: -0.385, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
   selectedCorner: 0
   _spheresScale: 0.01
   _settingsFileName: _keystoneSettings.json
   _useKeystone: 1
-  _debug: 1
+  _debug: 0
 --- !u!23 &1489870785
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1365,7 +1364,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1877268380}
-  - component: {fileID: 1877268379}
   m_Layer: 0
   m_Name: cityIO
   m_TagString: Untagged
@@ -1373,54 +1371,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1877268379
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1877268378}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4b2bd5685f9b49f4a7481b30fb93b1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _dataSource: 2
-  _tableAddUnderscore: _volpe
-  _delayWWW: 1
-  _newCityioDataFlag: 0
-  _tableX: 20
-  _tableY: 20
-  _cellWorldSize: 22
-  cellShrink: 0.95
-  floorHeight: 4
-  _material: {fileID: 2100000, guid: 008255bc08c6243f0891f779989f77f3, type: 2}
-  _table:
-    grid: []
-    objects:
-      slider1: 0
-      toggle1: 0
-      toggle2: 0
-      toggle3: 0
-      toggle4: 0
-      dockID: 0
-      dockRotation: 0
-      IDMax: 0
-      density: 
-      pop_young: 0
-      pop_mid: 0
-      pop_old: 0
-    id: 
-    timestamp: 0
-  _gridHolder: {fileID: 374258298}
-  textMeshPrefab: {fileID: 1457066846111462, guid: dfc34f4bc7c33413ba53f73a233bfade,
-    type: 2}
-  colors:
-  - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 1, g: 0.5, b: 0, a: 1}
-  - {r: 1, g: 1, b: 0, a: 1}
-  - {r: 0, g: 0.23006184, b: 1, a: 1}
-  - {r: 0.8235294, g: 0, b: 0.38745117, a: 1}
-  - {r: 0.8574761, g: 0.4, b: 0.6, a: 1}
 --- !u!4 &1877268380
 Transform:
   m_ObjectHideFlags: 0

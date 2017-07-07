@@ -177,7 +177,6 @@ public class Scanners : MonoBehaviour
 	private void setChildren(GameObject parent, ColorClassifier.SampleColor sampleColor) {
 		int children = parent.transform.childCount;
 		for (int i = 0; i < children; i++) {
-			print("For loop: " + parent.transform.GetChild(i));
 			sampleCubes [sampleColor].Add(parent.transform.GetChild (i).gameObject);
 		}
 	}
