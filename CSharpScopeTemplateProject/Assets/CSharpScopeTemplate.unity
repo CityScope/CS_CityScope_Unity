@@ -1243,7 +1243,7 @@ MonoBehaviour:
   _gridSizeX: 20
   _gridSizeY: 20
   _refreshRate: 1
-  _scannerScale: 0.1
+  _scannerScale: 0.01
   _useWebcam: 0
   _showRays: 0
   _debug: 1
@@ -1268,6 +1268,7 @@ MonoBehaviour:
   - {x: 0.6149994, y: 0.3549998, z: 0}
   - {x: 0.3900001, y: -0.385, z: 0}
   selectedCorner: 0
+  _spheresScale: 0.01
   _settingsFileName: _keystoneSettings.json
   _useKeystone: 1
   _debug: 1
@@ -1709,7 +1710,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1973213707}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -5}
+  m_LocalPosition: {x: 0, y: 0, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1982920853}

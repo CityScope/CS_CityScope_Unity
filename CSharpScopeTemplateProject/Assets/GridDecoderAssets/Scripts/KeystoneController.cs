@@ -31,6 +31,7 @@ public class KeystoneController : MonoBehaviour
 	private Vector3[] vertices;
 	private GameObject[] _corners;
 	public int selectedCorner;
+	public float  _spheresScale = 0.5f; 
 	private Mesh mesh;
 	private bool needUpdate = true;
 
@@ -169,6 +170,7 @@ public class KeystoneController : MonoBehaviour
 		_corners = new GameObject[vertices.Length]; // make corners spheres 
 		for (int i = 0; i < vertices.Length; i++) {
 			var obj = GameObject.CreatePrimitive (PrimitiveType.Sphere);
+			obj.transform.localScale = new Vector3 (_spheresScale,_spheresScale,_spheresScale);
 			obj.transform.SetParent (transform);
 			obj.GetComponent<Renderer> ().material.color = i == selectedCorner ? Color.green : Color.red;
 			_corners [i] = obj;

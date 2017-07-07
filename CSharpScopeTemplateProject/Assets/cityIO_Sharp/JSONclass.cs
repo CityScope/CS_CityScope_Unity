@@ -71,7 +71,7 @@ public class Table
 				currGrid.y = j;
 				currGrid.rot = 180;
 				table.grid.Add (currGrid);
-				Debug.Log ("TYPE = " + currGrid.type + " ");
+//				Debug.Log ("TYPE = " + currGrid.type + " ");
 			}
 		}
 			

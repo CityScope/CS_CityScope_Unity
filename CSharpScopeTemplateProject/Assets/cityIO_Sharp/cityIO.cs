@@ -174,7 +174,7 @@ public class cityIO : MonoBehaviour
                           _table.grid[i].x.ToString() + " Y: " +
                           _table.grid[i].y.ToString());
             }
-            ShowBuildingTypeText(i, cityIOGeo.transform.localScale.y); /// call if you need type text float 
+           // ShowBuildingTypeText(i, cityIOGeo.transform.localScale.y); /// call if you need type text float 
         }
     }
 
