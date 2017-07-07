@@ -17,6 +17,7 @@ public class Table
 
 	/// <summary>
 	/// Creates Table object from GridDecoder.
+	/// Returns true if there are changes to the grid.
 	/// </summary>
 	/// <param name="table">Table.</param>
 	public static bool CreateFromDecoder(ref Table table)
@@ -27,7 +28,6 @@ public class Table
 			return false;
 
 		if (table.grid != null) {
-			Debug.Log ("Updating table");
 			for (int i = 0; i < currIds.GetLength (0); i++) {
 				for (int j = 0; j < currIds.GetLength (1); j++) {
 					int currType = table.grid [i * currIds.GetLength (0) + j].type;
