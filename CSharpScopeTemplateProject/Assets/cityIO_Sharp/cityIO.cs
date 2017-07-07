@@ -81,9 +81,10 @@ public class cityIO : MonoBehaviour
         /*  strat update table with clean grid */
         foreach (Transform child in _gridHolder.transform)
         {
+			GameObject.Destroy (child.gameObject.GetComponent<Renderer>().material);
             GameObject.Destroy(child.gameObject);
         }
-
+			
         for (int i = 0; i < _table.grid.Count; i++) // loop through list of all cells grid objects 
         {
             /* make the grid cells in generic form */
