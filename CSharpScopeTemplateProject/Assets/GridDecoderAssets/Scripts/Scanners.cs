@@ -20,7 +20,7 @@ public class Scanners : MonoBehaviour
 {
 	// webcam and scanner vars
 	public static GameObject[,] scannersList;
-	public static int[,] currentIds;
+	public int[,] currentIds;
 
 	public GameObject _gridParent;
 	public int _gridSizeX;
@@ -245,7 +245,8 @@ public class Scanners : MonoBehaviour
 	}
 
 	public int[,] GetCurrentIds() {
-		return currentIds;
+		int[,] ids = currentIds.Clone () as int[,];
+		return ids;
 	}
 
 	/// <summary>

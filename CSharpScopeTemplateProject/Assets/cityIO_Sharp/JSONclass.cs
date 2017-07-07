@@ -50,7 +50,7 @@ public class Table
 
 	public static Table CreateFromDecoder()
 	{
-		int[,] currIds = Scanners.currentIds;
+		int[,] currIds = GameObject.Find ("Quad").GetComponent<Scanners> ().GetCurrentIds();
 
 		if (currIds == null) {
 			return new Table ();
@@ -66,8 +66,7 @@ public class Table
 		for (int i = 0; i < currIds.GetLength(0); i++) {
 			for (int j = 0; j < currIds.GetLength(1); j++) {
 				Grid currGrid = new Grid ();
-			//	currGrid.type = currIds [i, j];
-				currGrid.type = 1;
+				currGrid.type = currIds [i, j];
 				currGrid.x = i;
 				currGrid.y = j;
 				currGrid.rot = 180;
@@ -77,8 +76,7 @@ public class Table
 		}
 			
 		table.objects = new Objects ();
-		//table.objects.density = new List<int> (new int[] {1, 1, 1, 5, 2, 1});
-		Debug.Log (table.objects.density);
+		table.objects.density = new List<int> (new int[] {5, 8, 20, 0, 10, 3});
 
 		return table;
 	}

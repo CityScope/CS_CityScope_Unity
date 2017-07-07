@@ -48,9 +48,11 @@ public class cityIO : MonoBehaviour
                 _url = _urlLocalHost + _tableAddUnderscore;
             }
 
+			yield return new WaitForSeconds (_delayWWW);
+
 			// For JSON parsing
 			if (_dataSource != DataSource.INTERNAL) {
-				yield return new WaitForSeconds (_delayWWW);
+				
 				WWW _www = new WWW (_url);
 				yield return _www;
 				if (!string.IsNullOrEmpty (_www.error)) {
@@ -71,7 +73,6 @@ public class cityIO : MonoBehaviour
 				_table = Table.CreateFromDecoder();
 				_newCityioDataFlag = true;
 				if (_table.grid != null) {
-					Debug.Log ("Drawing table");
 					drawTable ();
 				}
 			}
@@ -85,6 +86,7 @@ public class cityIO : MonoBehaviour
         {
             GameObject.Destroy(child.gameObject);
         }
+
         for (int i = 0; i < _table.grid.Count; i++) // loop through list of all cells grid objects 
         {
             /* make the grid cells in generic form */
