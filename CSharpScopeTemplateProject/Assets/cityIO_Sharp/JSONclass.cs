@@ -48,21 +48,18 @@ public class Table
         return JsonUtility.FromJson<Table>(jsonString);
     }
 
-	public static Table CreateFromDecoder()
+	public static void CreateFromDecoder(ref Table table)
 	{
 		int[,] currIds = GameObject.Find ("Quad").GetComponent<Scanners> ().GetCurrentIds();
 
-		if (currIds == null) {
-			return new Table ();
-		}
-		
-		Table table = new Table ();
+		if (currIds == null)
+			return;
 
-		table.grid = new List<Grid> ();
+		if (table.grid != null)
+			table.grid.Clear ();
+		else 
+			table.grid = new List<Grid> ();
 
-		if ((int)(currIds.Length) <= 1) {
-			Debug.Log ("Empty dictionary.");
-		}
 		for (int i = 0; i < currIds.GetLength(0); i++) {
 			for (int j = 0; j < currIds.GetLength(1); j++) {
 				Grid currGrid = new Grid ();
@@ -76,8 +73,6 @@ public class Table
 			
 		table.objects = new Objects ();
 		table.objects.density = new List<int> (new int[] {5, 8, 20, 0, 10, 3});
-
-		return table;
 	}
 }
 

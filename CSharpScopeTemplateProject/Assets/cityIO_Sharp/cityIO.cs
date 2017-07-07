@@ -37,6 +37,9 @@ public class cityIO : MonoBehaviour
 
     IEnumerator Start()
     {
+
+		_table = new Table ();
+
         while (true)
         {
 			if (_dataSource == DataSource.REMOTE)
@@ -70,7 +73,7 @@ public class cityIO : MonoBehaviour
 					}
 				}
 			} else { // for app data
-				_table = Table.CreateFromDecoder();
+				Table.CreateFromDecoder(ref _table);
 				_newCityioDataFlag = true;
 				if (_table.grid != null) {
 					drawTable ();
