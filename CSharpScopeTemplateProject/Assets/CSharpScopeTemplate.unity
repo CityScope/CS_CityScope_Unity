@@ -1242,12 +1242,12 @@ MonoBehaviour:
   _gridSizeX: 20
   _gridSizeY: 20
   _refreshRate: 1
-  _scannerScale: 0.01
+  _scannerScale: 0.012
   _useWebcam: 0
   _showRays: 0
   _debug: 1
   _isCalibrating: 1
-  _colorSamplerParent: {fileID: 0}
+  _colorSamplerParent: {fileID: 11045109}
   _colorSettingsFileName: _sampleColorSettings.json
 --- !u!114 &1489870784
 MonoBehaviour:
@@ -1263,9 +1263,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _vertices:
   - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 1, z: 0}
+  - {x: 1, y: 1, z: 0}
+  - {x: 0, y: 1, z: 0}
   selectedCorner: 0
   _spheresScale: 0.01
   _settingsFileName: _keystoneSettings.json
@@ -1364,6 +1364,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1877268380}
+  - component: {fileID: 1877268379}
   m_Layer: 0
   m_Name: cityIO
   m_TagString: Untagged
@@ -1371,6 +1372,53 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1877268379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1877268378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4b2bd5685f9b49f4a7481b30fb93b1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dataSource: 2
+  _tableAddUnderscore: 
+  _delayWWW: 1
+  _newCityioDataFlag: 0
+  _tableX: 20
+  _tableY: 20
+  _cellWorldSize: 0
+  cellShrink: 0.12
+  floorHeight: 4
+  _material: {fileID: 0}
+  _table:
+    grid: []
+    objects:
+      slider1: 0
+      toggle1: 0
+      toggle2: 0
+      toggle3: 0
+      toggle4: 0
+      dockID: 0
+      dockRotation: 0
+      IDMax: 0
+      density: 
+      pop_young: 0
+      pop_mid: 0
+      pop_old: 0
+    id: 
+    timestamp: 0
+  _gridHolder: {fileID: 374258298}
+  textMeshPrefab: {fileID: 0}
+  colors:
+  - {r: 0.78676474, g: 0.13884082, b: 0.13884082, a: 0}
+  - {r: 0.8014706, g: 0.6836073, b: 0.6836073, a: 0}
+  - {r: 0.9044118, g: 0.61786187, b: 0.43225563, a: 0}
+  - {r: 0.36764705, g: 0.09191176, b: 0.09191176, a: 0}
+  - {r: 0.20209776, g: 0.2520083, b: 0.6544118, a: 0}
+  - {r: 0.7543253, g: 0.8831882, b: 0.9411765, a: 0}
 --- !u!4 &1877268380
 Transform:
   m_ObjectHideFlags: 0
