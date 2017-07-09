@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿
+/// <summary> 
+/// Class that mirrors data format from cityIO server JSON files (or local source) and allow parsing of data across project
+/// </summary>
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-/// <summary> 
-/// class start 
-/// </summary>
 
 public enum Brick { RL = 0, RM = 1, RS = 2, OL = 3, OM = 4, OS = 5, ROAD = 6, PARK = 7, PARKING = 8, STREET = 9, INVALID = -1, MASK = -2 };
 
@@ -28,7 +29,7 @@ public class Objects
     public int dockID;
     public int dockRotation;
     public int IDMax;
-	public List<int> density;
+    public List<int> density;
     public int pop_young;
     public int pop_mid;
     public int pop_old;
