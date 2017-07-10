@@ -1,12 +1,6 @@
 # =============== #
 # Unity generated #
 # =============== #
-CSharpScopeTemplateProject/[Tt]emp
-CSharpScopeTemplateProject/[Oo]bj
-CSharpScopeTemplateProject/[Bb]uild
-CSharpScopeTemplateProject/[Bb]uilds
-CSharpScopeTemplateProject/[Ll]ibrary
-**/Library
 sysinfo.txt
 *.stackdump
 /Assets/AssetStoreTools*
@@ -48,10 +42,15 @@ ehthumbs.db
 **/Library/metadata/*
 
 # Unity3D generated meta files
-*.pidb.meta
-CSharpScopeTemplateProject/Library/metadata/00/00000000000000002000000000000000
-CSharpScopeTemplateProject/Library/metadata/00/00000000000000007000000000000000
-CSharpScopeTemplateProject/Library/metadata/00/0000000000000000a000000000000000
 *.meta
-CSharpScopeTemplateProject/Library/metadata/f7/f70555f144d8491a825f0804e09c671c
 *.mdb
+=======
+*.meta
+
+CSharpScopeTemplateProject/Library/metadata/07/0795b529181c740d69a7a6e79c976b30
+
+*.mdb
+
+*.dll
+>>>>>>> origin/master
+CSharpScopeTemplateProject/Library/shadercompiler-UnityShaderCompiler.exe0.log
