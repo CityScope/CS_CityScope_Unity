@@ -36,10 +36,10 @@ Icon?
 ehthumbs.db
 [Tt]humbs.db
 
-[Dd]esktop.ini
-**/Library/ShaderCache/
-**/Library/metadata/
-**/Library/metadata/*
+[Dd]esktop.init
+**/Temp/**
+**/ShaderCache/**
+**/metadata/**
 
 # Unity3D generated meta files
 *.meta
