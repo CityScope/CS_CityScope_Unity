@@ -24,8 +24,8 @@ public class KeystoneController : MonoBehaviour
 
 	KeystoneSettings settings;
 
-	private float[] d = new float[4];
-	float[] q = new float[4];
+	private float[] d;
+	float[] q;
 
 	public Vector3[] _vertices;
 	private Vector3[] vertices;
@@ -43,18 +43,22 @@ public class KeystoneController : MonoBehaviour
 
 	GameObject debugIntersectionSphere;
 
-	Vector3[]  texCoords = new Vector3[] {
-		new Vector3(0, 0, 1),
-		new Vector3(0, 1, 1),
-		new Vector3(1 , 1, 1),
-		new Vector3(1, 0, 1)
-	};
+	Vector3[] texCoords;
 		
 	/// <summary>
 	/// Start this instance.
 	/// </summary>
 	void Start ()
 	{
+		texCoords = new Vector3[] {
+			new Vector3(0, 0, 1),
+			new Vector3(0, 1, 1),
+			new Vector3(1 , 1, 1),
+			new Vector3(1, 0, 1)
+		};
+		d = new float[4];
+		q = new float[4];
+
 		EventManager.StartListening ("reload", OnReloadKeystone);
 
 		Destroy (this.GetComponent <MeshCollider> ()); //destroy so we can make one in dynamically 
@@ -82,6 +86,9 @@ public class KeystoneController : MonoBehaviour
 			}
 		}
 		onOffObjects (_useKeystone); // toggles onoff at each click
+
+		if (Time.frameCount % 30 == 0)
+			System.GC.Collect();
 	}
 
 	/// <summary>
