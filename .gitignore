@@ -49,3 +49,10 @@ ehthumbs.db
 
 # Unity3D generated meta files
 *.pidb.meta
+*.meta
+
+CSharpScopeTemplateProject/Library/metadata/07/0795b529181c740d69a7a6e79c976b30
+
+*.mdb
+
+*.dll
