@@ -19,14 +19,22 @@ public class ColorClassifier {
 	// 0 - white
 	// 1 - black
 	// 2 - red
-	private Color[] rgbColor = {
-		new Color (1f, 1f, 1f),
-		new Color (0f, 0f, 0f),
-		new Color (1f, 0f, 0f)
-	};
-
+	private Color[] rgbColor;
 	public enum SampleColor { WHITE = 0, BLACK = 1, RED = 2 };
-	private Dictionary<SampleColor, List<Vector3>> sampleColors = new Dictionary<SampleColor, List<Vector3>>();
+
+	private Dictionary<SampleColor, List<Vector3>> sampleColors;
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="ColorClassifier"/> class.
+	/// </summary>
+	public ColorClassifier() {
+		sampleColors = new Dictionary<SampleColor, List<Vector3>>();
+		rgbColor = new Color[] {
+			new Color (1f, 1f, 1f),
+			new Color (0f, 0f, 0f),
+			new Color (1f, 0f, 0f)
+		};
+	}
 
 	/// <summary>
 	/// Finds the closest color to the given scan colors.
@@ -118,6 +126,10 @@ public class ColorClassifier {
 		}
 	}
 
+	/// <summary>
+	/// Sorts the colors.
+	/// </summary>
+	/// <param name="colors">Colors.</param>
 	public void SortColors(Color[] colors) {
 		createDebugObjects (colors.Length);
 

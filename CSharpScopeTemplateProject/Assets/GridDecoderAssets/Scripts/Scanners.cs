@@ -40,13 +40,14 @@ public class Scanners : MonoBehaviour
 	public bool _showRays = false;
 	public bool _debug = true;
 	public bool _isCalibrating;
+	public bool _showDebugColors = false;
 	int _gridSize = 2; // i.e. 2x2 reading for one cell
 
 	private bool setup = true;
 
 	// Color calibration
 	ColorSettings colorSettings;
-	ColorClassifier colorClassifier = new ColorClassifier ();
+	ColorClassifier colorClassifier;
 
 	private Dictionary<ColorClassifier.SampleColor, List<GameObject>> sampleCubes;
 
@@ -118,6 +119,7 @@ public class Scanners : MonoBehaviour
 		scannersList = new GameObject[numOfScannersX, numOfScannersY];
 		allColors = new Color[numOfScannersX * numOfScannersY];
 		currentIds = new int[numOfScannersX / _gridSize, numOfScannersY / _gridSize];
+		colorClassifier = new ColorClassifier ();
 		SetupSampleObjects ();
 		MakeScanners ();
 
@@ -216,7 +218,7 @@ public class Scanners : MonoBehaviour
 			}
 		}
 
-		if (setup)
+		if (_showDebugColors && setup)
 			colorClassifier.SortColors (allColors);
 	}
 
