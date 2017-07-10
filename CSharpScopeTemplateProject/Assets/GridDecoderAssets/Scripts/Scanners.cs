@@ -373,7 +373,7 @@ public class Scanners : MonoBehaviour
 				if (colorSettings.position.Count <= index) {
 					colorSettings.position.Add(new Vector3(0, 0, 0));
 				}
-				colorSettings.position [index++] = cube.Value [i].transform.position;
+				colorSettings.position [index++] = sampleCubes [cube.Key] [i].transform.position;
 				Debug.Log ("Writing settings for index " + index);
 			}
 		}
