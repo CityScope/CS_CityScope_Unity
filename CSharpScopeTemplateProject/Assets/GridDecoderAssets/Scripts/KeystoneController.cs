@@ -87,8 +87,6 @@ public class KeystoneController : MonoBehaviour
 		}
 		onOffObjects (_useKeystone); // toggles onoff at each click
 
-		if (Time.frameCount % 30 == 0)
-			System.GC.Collect();
 	}
 
 	/// <summary>

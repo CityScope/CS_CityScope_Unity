@@ -31,7 +31,7 @@ public class cityIO : MonoBehaviour
     ///<summary>
     /// data refresh rate in seconds 
     /// </summary>
-    public int _delayWWW;
+    public float _delayWWW;
     private WWW _www;
     private string _oldData;
     ///<summary>
@@ -81,7 +81,7 @@ public class cityIO : MonoBehaviour
     {
         _table = new Table();
         _table.objects = new Objects();
-        _table.objects.density = new List<int>(new int[] { 5, 8, 20, 0, 10, 3 });
+        _table.objects.density = new List<int>(new int[] { 5, 8, 20, 1, 10, 3 });
 
         while (true)
         {
@@ -175,7 +175,7 @@ public class cityIO : MonoBehaviour
                     _gridObject.transform.localPosition =
                     new Vector3((_table.grid[i].x * _cellSizeInMeters), 0, (_table.grid[i].y * _cellSizeInMeters)); //compensate for scale shift and x,y array
                     _gridObject.transform.localScale = new Vector3(cellShrink * _cellSizeInMeters, 0.25f, cellShrink * _cellSizeInMeters);
-                    var _tmpColor = Color.gray;
+                    var _tmpColor = Color.white;
                     _tmpColor.a = 1f;
                     _gridObject.GetComponent<Renderer>().material.color = _tmpColor;
                 }
@@ -185,7 +185,7 @@ public class cityIO : MonoBehaviour
                     _gridObject.transform.localScale = new Vector3(cellShrink * _cellSizeInMeters, 0.25f, cellShrink * _cellSizeInMeters);
                     _gridObject.transform.localPosition = new Vector3
                     (_table.grid[i].x * _cellSizeInMeters, 0, _table.grid[i].y * _cellSizeInMeters); //compensate for scale shift and x,y array
-                    var _tmpColor = Color.green;
+                    var _tmpColor = Color.white;
                     _tmpColor.a = 1f;
                     _gridObject.GetComponent<Renderer>().material.color = _tmpColor;
                 }
@@ -195,7 +195,7 @@ public class cityIO : MonoBehaviour
                     _gridObject.transform.localScale = new Vector3(_cellSizeInMeters, 1, _cellSizeInMeters);
                     _gridObject.transform.localPosition = new Vector3
                     (_table.grid[i].x * _cellSizeInMeters, 0, _table.grid[i].y * _cellSizeInMeters); //compensate for scale shift and x,y array
-                    var _tmpColor = Color.gray;
+                    var _tmpColor = Color.white;
                     _tmpColor.a = 1f;
                     _gridObject.GetComponent<Renderer>().material.color = _tmpColor;
                 }
@@ -205,7 +205,7 @@ public class cityIO : MonoBehaviour
                     new Vector3((_table.grid[i].x * _cellSizeInMeters), 0, (_table.grid[i].y * _cellSizeInMeters)); //hide base plates 
                     _gridObject.transform.localScale = new Vector3
                     (cellShrink * _cellSizeInMeters * 0.85f, 0.85f, cellShrink * _cellSizeInMeters * 0.85f);
-                    _gridObject.GetComponent<Renderer>().material.color = Color.black;
+                    _gridObject.GetComponent<Renderer>().material.color = Color.white;
                 }
             }
 

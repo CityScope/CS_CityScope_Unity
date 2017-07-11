@@ -98,8 +98,8 @@ public class Scanners : MonoBehaviour
 			if (setup)
 				setup = false;
 
-			if (Time.frameCount % 30 == 0)
-				System.GC.Collect();
+		//	if (Time.frameCount % 30 == 0)
+		//		System.GC.Collect();
 		}
 	}
 
