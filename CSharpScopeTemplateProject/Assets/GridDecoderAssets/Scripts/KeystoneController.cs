@@ -40,10 +40,13 @@ public class KeystoneController : MonoBehaviour
 	public bool _useKeystone = true;
 	public bool _debug = false;
 	private float speed = 0.001f;
+	public float _brightness = 0.5f;
+	public float _contrast = 1;
 
 	GameObject debugIntersectionSphere;
 
 	Vector3[] texCoords;
+	List<Vector2> texCoords1;
 		
 	/// <summary>
 	/// Start this instance.
@@ -58,6 +61,13 @@ public class KeystoneController : MonoBehaviour
 		};
 		d = new float[4];
 		q = new float[4];
+
+		texCoords1 = new List<Vector2> {
+			new Vector2(_contrast, _brightness),
+			new Vector2(_contrast, _brightness),
+			new Vector2(_contrast, _brightness),
+			new Vector2(_contrast, _brightness)
+		};
 
 		EventManager.StartListening ("reload", OnReloadKeystone);
 
@@ -106,6 +116,9 @@ public class KeystoneController : MonoBehaviour
 		};
 
 		mesh.SetUVs (0, texCoordsV3);
+
+		// Set brightness & contrast
+		mesh.SetUVs(1, texCoords1);
 		transform.GetComponent<MeshCollider> ().sharedMesh = mesh;
 	}
 
