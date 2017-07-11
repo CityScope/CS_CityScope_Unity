@@ -9,10 +9,13 @@ using System.Linq;
 [System.Serializable]
 public class ColorSettings {
 	// Color sample objects
+	public List<int> id;
 	public List<Vector3> position;
+	public Vector3 gridPosition;
 
-	public ColorSettings(int positionCount) {
+	public ColorSettings() {
 		position = new List<Vector3>();
+		id = new List<int> ();
 	}
 }
 
@@ -339,7 +342,7 @@ public class Scanners : MonoBehaviour
 	/// </summary>
 	private void LoadSamplers() {
 		if (_debug)
-			Debug.Log ("Loading color sampling settings.");
+			Debug.Log ("Loading color sampling settings from  " + _colorSettingsFileName);
 
 		string dataAsJson = JsonParser.loadJSON (_colorSettingsFileName, _debug);
 		colorSettings = JsonUtility.FromJson<ColorSettings>(dataAsJson);
@@ -348,14 +351,18 @@ public class Scanners : MonoBehaviour
 		if (colorSettings.position == null)
 			return;
 
+		int currId = 0;
 		int index = 0;
-		foreach (var cube in sampleCubes) {
-			for (int i = 0; i < cube.Value.Count; i++) {
-				if (colorSettings.position.Count > index)
-					sampleCubes [cube.Key] [i].transform.position = colorSettings.position [index++];
+		for (int i = 0; i < colorSettings.position.Count; i++) {
+			if (currId != colorSettings.id [i]) {
+				currId = colorSettings.id [i];
+				index = 0;
 			}
+
+			sampleCubes [(ColorClassifier.SampleColor)currId] [index++].transform.position = colorSettings.position [i];
 		}
 			
+		_gridParent.transform.position = colorSettings.gridPosition;
 	}
 
 	/// <summary>
@@ -363,10 +370,10 @@ public class Scanners : MonoBehaviour
 	/// </summary>
 	private void SaveSamplers() {
 		if (_debug)
-			Debug.Log ("Saving color sampling settings.");
+			Debug.Log ("Saving color sampling settings to " + _colorSettingsFileName);
 
 		if (colorSettings == null || colorSettings.position == null) {
-			colorSettings = new ColorSettings (sampleCubes.Count);
+			colorSettings = new ColorSettings ();
 		}
 
 		int index = 0;
@@ -374,11 +381,14 @@ public class Scanners : MonoBehaviour
 			for (int i = 0; i < cube.Value.Count; i++) {
 				if (colorSettings.position.Count <= index) {
 					colorSettings.position.Add(new Vector3(0, 0, 0));
+					colorSettings.id.Add (0);
 				}
+				colorSettings.id [index] = (int)cube.Key;
 				colorSettings.position [index++] = sampleCubes [cube.Key] [i].transform.position;
-				Debug.Log ("Writing settings for index " + index);
 			}
 		}
+
+		colorSettings.gridPosition = _gridParent.transform.position;
 
 		string dataAsJson = JsonUtility.ToJson (colorSettings);
 		JsonParser.writeJSON (_colorSettingsFileName, dataAsJson);
