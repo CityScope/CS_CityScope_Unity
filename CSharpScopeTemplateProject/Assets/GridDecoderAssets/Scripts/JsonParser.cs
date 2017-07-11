@@ -12,7 +12,7 @@ public class JsonParser {
 	/// <returns><c>true</c>, if JSO was loaded, <c>false</c> otherwise.</returns>
 	/// <param name="fileName">File name.</param>
 	public static string loadJSON(string _settingsFileName, bool debug) {
-		string filePath = Application.streamingAssetsPath + _settingsFileName;
+		string filePath = "Assets/Settings/" +  _settingsFileName;
 
 		if (File.Exists(filePath))
 		{
@@ -25,7 +25,7 @@ public class JsonParser {
 		}
 		else
 		{
-			Debug.LogError("Cannot load data!");
+			Debug.LogError("Cannot load data from " + filePath);
 			return "";
 		}
 	}
@@ -35,7 +35,7 @@ public class JsonParser {
 	/// </summary>
 	/// <returns><c>true</c>, if JSO was writed, <c>false</c> otherwise.</returns>
 	public static bool writeJSON(string _settingsFileName, string dataAsJson) {
-		string filePath = Application.streamingAssetsPath + _settingsFileName;
+		string filePath = "Assets/Settings/" + _settingsFileName;
 		File.WriteAllText (filePath, dataAsJson);
 		return true;
 	}

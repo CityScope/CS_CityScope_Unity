@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44824833, g: 0.49827534, b: 0.57558256, a: 1}
+  m_IndirectSpecularColor: {r: 0.4481508, g: 0.4981758, b: 0.5754946, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -269,7 +269,6 @@ Material:
   m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
@@ -1402,7 +1401,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1489870780}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f172c540594a4d399cc50aba0a3aef0, type: 3}
   m_Name: 
@@ -1424,13 +1423,13 @@ MonoBehaviour:
   _gridSizeY: 20
   _refreshRate: 1
   _scannerScale: 0.012
-  _useWebcam: 1
+  _useWebcam: 0
   _showRays: 0
   _debug: 0
   _isCalibrating: 1
   _showDebugColors: 0
   _colorSamplerParent: {fileID: 11045109}
-  _colorSettingsFileName: _sampleColorSettings.json
+  _colorSettingsFileName: sampleColorSettings.json
 --- !u!114 &1489870784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1450,7 +1449,7 @@ MonoBehaviour:
   - {x: 0, y: 1, z: 0}
   selectedCorner: 0
   _spheresScale: 0.01
-  _settingsFileName: _liveKeystoneSettings.json
+  _settingsFileName: keystoneSettings.json
   _useKeystone: 0
   _debug: 0
 --- !u!23 &1489870785
@@ -1545,7 +1544,7 @@ MonoBehaviour:
   - {x: 1, y: 0, z: 0}
   selectedCorner: 0
   _spheresScale: 0.1
-  _settingsFileName: _projectionSettings.json
+  _settingsFileName: projectionSettings.json
   _useKeystone: 1
   _debug: 0
 --- !u!23 &1729727327

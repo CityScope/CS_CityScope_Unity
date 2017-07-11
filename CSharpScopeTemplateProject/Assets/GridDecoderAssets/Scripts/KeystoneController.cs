@@ -113,8 +113,8 @@ public class KeystoneController : MonoBehaviour
 	/// Finds qi for texture mapping the quad.
 	/// </summary>
 	private void findQs() {
-		if (IsIntersecting(vertices[1], vertices[0], vertices[3], vertices[2]))
-			Debug.Log ("Intersection found.");
+		if (!IsIntersecting(vertices[1], vertices[0], vertices[3], vertices[2]))
+			Debug.Log ("Perspective correction failed to find q.");
 
 		// http://www.reedbeta.com/blog/2012/05/26/quadrilateral-interpolation-part-1/
 		// calculate qi
