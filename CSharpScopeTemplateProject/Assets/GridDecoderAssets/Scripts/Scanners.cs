@@ -101,8 +101,8 @@ public class Scanners : MonoBehaviour
 			if (setup)
 				setup = false;
 
-		//	if (Time.frameCount % 30 == 0)
-		//		System.GC.Collect();
+			if (Time.frameCount % 60 == 0)
+				System.GC.Collect();
 		}
 	}
 
@@ -341,15 +341,13 @@ public class Scanners : MonoBehaviour
 	/// Loads the color sampler objects from a JSON.
 	/// </summary>
 	private void LoadSamplers() {
-		if (_debug)
-			Debug.Log ("Loading color sampling settings from  " + _colorSettingsFileName);
+		Debug.Log ("Loading color sampling settings from  " + _colorSettingsFileName);
 
 		string dataAsJson = JsonParser.loadJSON (_colorSettingsFileName, _debug);
 		colorSettings = JsonUtility.FromJson<ColorSettings>(dataAsJson);
 
 		if (colorSettings == null) return;
-		if (colorSettings.position == null)
-			return;
+		if (colorSettings.position == null) return;
 
 		int currId = 0;
 		int index = 0;
@@ -358,7 +356,6 @@ public class Scanners : MonoBehaviour
 				currId = colorSettings.id [i];
 				index = 0;
 			}
-
 			sampleCubes [(ColorClassifier.SampleColor)currId] [index++].transform.position = colorSettings.position [i];
 		}
 			
@@ -369,8 +366,7 @@ public class Scanners : MonoBehaviour
 	/// Saves the color sampler objects to a JSON.
 	/// </summary>
 	private void SaveSamplers() {
-		if (_debug)
-			Debug.Log ("Saving color sampling settings to " + _colorSettingsFileName);
+		Debug.Log ("Saving color sampling settings to " + _colorSettingsFileName);
 
 		if (colorSettings == null || colorSettings.position == null) {
 			colorSettings = new ColorSettings ();
@@ -400,10 +396,8 @@ public class Scanners : MonoBehaviour
 	private void onKeyPressed ()
 	{
 		if (Input.GetKey (KeyCode.S) && _isCalibrating) {
-			Debug.Log ("Key pressed to save color settings.");
 			SaveSamplers ();
 		} else if (Input.GetKey (KeyCode.L)) {
-			Debug.Log ("Key pressed to load color settings.");
 			LoadSamplers ();
 		}
 	}

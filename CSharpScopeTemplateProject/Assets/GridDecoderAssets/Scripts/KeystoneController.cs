@@ -12,7 +12,7 @@ using System.IO;
 public class KeystoneSettings {
 	
 	// Quad control variables
-	public Vector3[] vertices = new Vector3[4];
+	public Vector3[] vertices;
 
 	public KeystoneSettings(Vector3[] newVertices) {
 		this.vertices = newVertices;
@@ -200,19 +200,16 @@ public class KeystoneController : MonoBehaviour
 	/// </summary>
 	private void OnSceneControl ()
 	{
-		if (Input.anyKey && _debug)
-			Debug.Log("Current input is " + Input.inputString);
-
-		if (Input.GetKey (KeyCode.S)) {
-			SaveSettings ();
-			return;
-		} else if (Input.GetKey (KeyCode.L)) {
+		if (Input.GetKey (KeyCode.L))
 			LoadSettings ();
-			return;
-		}
 
 		if (!_useKeystone)
 			return;
+
+		// Save keystone settings only in keystone edit mode!
+		if (Input.GetKey (KeyCode.S))
+			SaveSettings ();
+		
 		UpdateSelection ();
 	}
 
