@@ -412,4 +412,8 @@ public class Scanners : MonoBehaviour
 		LoadSamplers ();
 	}
 
+	public void OnSave() {
+		SaveSamplers ();
+	}
+
 }

@@ -22,9 +22,6 @@ public class ResetScene : MonoBehaviour
 		SceneManager.LoadScene (scene.name);
 
 		EventManager.TriggerEvent ("reload");
-        
-       // webcam.Play();
-
 		Debug.Log ("Reset scene.");
     }
 

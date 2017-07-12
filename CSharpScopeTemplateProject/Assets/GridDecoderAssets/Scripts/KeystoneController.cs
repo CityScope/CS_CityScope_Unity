@@ -41,6 +41,8 @@ public class KeystoneController : MonoBehaviour
 	public bool _debug = false;
 	private float speed = 0.001f;
 
+	public int id;
+
 	GameObject debugIntersectionSphere;
 
 	Vector3[] texCoords;
@@ -220,8 +222,7 @@ public class KeystoneController : MonoBehaviour
 	/// </summary>
 	/// <returns><c>true</c>, if settings were saved, <c>false</c> otherwise.</returns>
 	private bool SaveSettings() {
-		if (_debug)
-			Debug.Log ("Saving keystone settings.");
+		Debug.Log ("Saving keystone settings in " + _settingsFileName);
 
 		settings.vertices = vertices;
 
@@ -236,8 +237,7 @@ public class KeystoneController : MonoBehaviour
 	/// </summary>
 	/// <returns><c>true</c>, if settings were loaded, <c>false</c> otherwise.</returns>
 	private bool LoadSettings() {
-		if (_debug)
-			Debug.Log ("Loading keystone settings.");
+		Debug.Log ("Loading keystone settings from " + _settingsFileName);
 
 		string dataAsJson = JsonParser.loadJSON (_settingsFileName, _debug);
 
@@ -300,9 +300,20 @@ public class KeystoneController : MonoBehaviour
 	/// </summary>
 	void OnReloadKeystone() {
 		Debug.Log ("Keystone config was reloaded!");
-
 		LoadSettings ();
 	}
+
+	public void SetKeystone(int id) {
+		if (this.id == id)
+			_useKeystone = true;
+		else
+			_useKeystone = false;
+	}
+		
+	public void OnSave() {
+		SaveSettings ();
+	}
+
 }
 
 
