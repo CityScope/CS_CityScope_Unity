@@ -80,6 +80,7 @@ public class Scanners : MonoBehaviour
 	{
 		InitVariables ();
 		EventManager.StartListening ("reload", OnReload);
+		EventManager.StartListening ("save", OnSave);
 	
 		while (true) {
 			yield return new WaitForEndOfFrame ();

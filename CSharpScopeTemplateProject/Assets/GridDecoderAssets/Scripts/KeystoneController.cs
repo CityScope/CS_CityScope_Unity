@@ -62,7 +62,8 @@ public class KeystoneController : MonoBehaviour
 		d = new float[4];
 		q = new float[4];
 
-		EventManager.StartListening ("reload", OnReloadKeystone);
+		EventManager.StartListening ("reload", OnReload);
+		EventManager.StartListening ("save", OnSave);
 
 		Destroy (this.GetComponent <MeshCollider> ()); //destroy so we can make one in dynamically 
 		transform.gameObject.AddComponent <MeshCollider> (); //add new collider 
@@ -298,7 +299,7 @@ public class KeystoneController : MonoBehaviour
 	/// <summary>
 	/// Reloads configuration / keystone settings when the scene is refreshed.
 	/// </summary>
-	void OnReloadKeystone() {
+	void OnReload() {
 		Debug.Log ("Keystone config was reloaded!");
 		LoadSettings ();
 	}
