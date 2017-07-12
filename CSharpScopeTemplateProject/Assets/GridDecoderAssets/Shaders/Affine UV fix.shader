@@ -1,12 +1,11 @@
 ﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
 Shader "Custom/Affine UV fix Cg" {
  
     Properties {
- 
         _MainTex ("Base (RGB)", 2D) = "white" {}
+        _Brightness ("Brightness", Range(0,1)) = 0.5
+		_Contrast ("Contrast", Range(0,2)) = 1.0
     }
  
     SubShader {
@@ -19,6 +18,9 @@ Shader "Custom/Affine UV fix Cg" {
             CGPROGRAM
  
             uniform sampler2D _MainTex;
+
+            half _Brightness;
+			half _Contrast;
          
             #pragma vertex vert          
             #pragma fragment frag
@@ -27,13 +29,11 @@ Shader "Custom/Affine UV fix Cg" {
 	        struct vertexInput {
 	            float4 vertex : POSITION;        
 	            float3 texcoord  : TEXCOORD0;
-	            float2 texcoord1 : TEXCOORD1;
 	        };
 	 
 	        struct vertexOutput {
 	            float4 pos : SV_POSITION;
 	            float3 uv  : TEXCOORD0;
-	            float2 uv2 : TEXCOORD1;
 	        };
 	 
 	        vertexOutput vert(vertexInput input)
@@ -43,7 +43,6 @@ Shader "Custom/Affine UV fix Cg" {
 	            output.pos = UnityObjectToClipPos (input.vertex);
 	         
 	            output.uv = input.texcoord;
-	            output.uv2 = input.texcoord1;
 	         
 	            return output;
 	        }
@@ -51,8 +50,7 @@ Shader "Custom/Affine UV fix Cg" {
 	        float4 frag(vertexOutput input) : COLOR
 	        {    
 	            float4 startColor =  tex2D(_MainTex, float2(input.uv.xy)/(input.uv.z));
-	            // Adjust brightness / contrast
-	            startColor = (startColor - 0.5f) * max(input.uv2.x, 0) + input.uv2.y;
+	            startColor = (startColor - 0.5f) * max(_Contrast, 0) + 0.5f + _Brightness;
                 return startColor;
 	        }
      
