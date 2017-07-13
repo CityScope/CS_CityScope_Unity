@@ -34,6 +34,7 @@ public class HeatMaps : MonoBehaviour
         {
             if (_city_IO_script.GetComponent<cityIO>()._newCityioDataFlag)
             {
+                MakeHeatmapGrid();
                 SearchNeighbors();
                 yield return new WaitForSeconds(_delay);
             }
@@ -44,36 +45,21 @@ public class HeatMaps : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// create array from data 
-    /// run 2xloops of x, y
-    /// find location of item x,y
-    /// store its location in new array
-    /// create search 'window' around it:
-    /// [x-n, x+n, y-n, y+n]
-    /// if found Target item, measure Manhatten distance to it
-    /// add distances to _v.arDist and create new array of [x,y,_varDist]
-    /// loop through array, look for min, max of _varDist
-    /// assign color/Y axis/other viz based on value
-    ///
-    /// </summary>
-
-    public void SearchNeighbors()
+    void MakeHeatmapGrid() // create the base quads 
     {
-        // // start new grid by cleaning old one 
-        // foreach (Transform child in transform)
-        // {
-        //     GameObject.Destroy(child.gameObject.GetComponent<Renderer>().material);
-        //     GameObject.Destroy(child.gameObject);
-        // }
+        // start new grid by cleaning old one 
+        foreach (Transform child in transform)
+        {
+            GameObject.Destroy(child.gameObject.GetComponent<Renderer>().material);
+            GameObject.Destroy(child.gameObject);
+        }
 
+        
         _counter = 0;
-
         for (int x = 0; x < _city_IO_script._tableX; x++)
         {
             for (int y = 0; y < _city_IO_script._tableY; y++)
             {
-                // create the base quads 
                 _heatMapObjects[x, y] = (GameObject)GameObject.CreatePrimitive(PrimitiveType.Quad); //make cell cube
                 _heatMapObjects[x, y].transform.parent = transform; //put into parent object for later control
                 _heatMapObjects[x, y].name = ("X: " + x + " Y: " + y + " Type: " + _city_IO_script._table.grid[_counter].type +
@@ -94,7 +80,38 @@ public class HeatMaps : MonoBehaviour
                 _heatMapObjects[x, y].transform.GetComponent<Renderer>().shadowCastingMode =
                      UnityEngine.Rendering.ShadowCastingMode.Off;
 
-                /* --------------------------------------------------------------------------------------- */
+                _counter = _counter + 1;
+
+            }
+        }
+    }
+    /// <summary>
+    /// create array from data 
+    /// run 2xloops of x, y
+    /// find location of item x,y
+    /// store its location in new array
+    /// create search 'window' around it:
+    /// [x-n, x+n, y-n, y+n]
+    /// if found Target item, measure Manhatten distance to it
+    /// add distances to _v.arDist and create new array of [x,y,_varDist]
+    /// loop through array, look for min, max of _varDist
+    /// assign color/Y axis/other viz based on value
+    ///
+    /// </summary>
+    void SearchNeighbors()
+    {
+        // // start new grid by cleaning old one 
+        // foreach (Transform child in transform)
+        // {
+        //     GameObject.Destroy(child.gameObject.GetComponent<Renderer>().material);
+        //     GameObject.Destroy(child.gameObject);
+        // }
+
+        _counter = 0;
+        for (int x = 0; x < _city_IO_script._tableX; x++)
+        {
+            for (int y = 0; y < _city_IO_script._tableY; y++)
+            {
 
                 if (_city_IO_script._table.grid[_counter].type == 4) // what is the cells type we're searching for? 
                 {
@@ -121,8 +138,6 @@ public class HeatMaps : MonoBehaviour
                                     var _tmpColor = _cellScoreCount / Mathf.Pow(2 * _searchDist, 2); // color spectrum based on cell score/max potential score 
                                     _heatMapObjects[_windowX, _windowY].transform.GetComponent<Renderer>().material.color =
                                     Color.HSVToRGB(1, 1, _tmpColor);
-
-                                    // print("for  " + x + " " + y + " nearing " + ((_windowX * _city_IO_script._tableX) + _windowY));
 
                                     _heatMapObjects[_windowX, _windowY].transform.localPosition =
                                     new Vector3(_heatMapObjects[_windowX, _windowY].transform.localPosition.x,
