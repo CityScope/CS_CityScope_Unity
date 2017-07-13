@@ -20,10 +20,10 @@ public class Table
 	/// Returns true if there are changes to the grid.
 	/// </summary>
 	/// <param name="table">Table.</param>
-	public static bool CreateFromDecoder(ref Table table)
+	public static bool CreateFromDecoder(ref Table table, string scannersParentName)
 	{
 		bool needsUpdate = false;
-		int[,] currIds = GameObject.Find ("Quad").GetComponent<Scanners> ().GetCurrentIds();
+		int[,] currIds = GameObject.Find (scannersParentName).GetComponent<Scanners> ().GetCurrentIds();
 		if (currIds == null)
 			return false;
 

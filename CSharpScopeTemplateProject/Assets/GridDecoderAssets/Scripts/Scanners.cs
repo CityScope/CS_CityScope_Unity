@@ -78,10 +78,15 @@ public class Scanners : MonoBehaviour
 
 	IEnumerator Start ()
 	{
+		if (_useWebcam) {
+			if (!GetComponent<Webcam> ().enabled)
+				GetComponent<Webcam> ().enabled = true;
+		}
+
 		InitVariables ();
 		EventManager.StartListening ("reload", OnReload);
 		EventManager.StartListening ("save", OnSave);
-	
+			
 		while (true) {
 			yield return new WaitForEndOfFrame ();
 			SetTexture ();
@@ -104,6 +109,7 @@ public class Scanners : MonoBehaviour
 
 			if (Time.frameCount % 60 == 0)
 				System.GC.Collect();
+
 		}
 	}
 

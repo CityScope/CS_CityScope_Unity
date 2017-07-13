@@ -120,8 +120,8 @@ public class cityIO : MonoBehaviour
                 }
             }
             else
-            { // for app data
-                bool update = Table.CreateFromDecoder(ref _table);
+			{ // for app data _gridHolder.transform.name
+				bool update = Table.CreateFromDecoder(ref _table, "CameraKeystoneQuad");
                 _newCityioDataFlag = true;
                 if (_table.grid != null && update)
                     drawTable();
