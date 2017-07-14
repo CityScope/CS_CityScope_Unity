@@ -1,9 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
-using System.IO;
-using System.Linq;
 
 public class HeatMaps : MonoBehaviour
 {
@@ -63,7 +60,11 @@ public class HeatMaps : MonoBehaviour
             }
         }
     }
-    void MakeHeatmapGrid() // create the base quads once
+
+    /// <summary>
+    /// creates a simple flat grid as heatmap base 
+    /// </summary>
+    void MakeHeatmapGrid()
     {
         _counter = 0;
         for (int x = 0; x < _city_IO_script._tableX; x++)
