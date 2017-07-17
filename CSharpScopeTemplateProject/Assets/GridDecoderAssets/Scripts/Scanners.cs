@@ -284,22 +284,27 @@ public class Scanners : MonoBehaviour
 				int _locY = Mathf.RoundToInt (hit.textureCoord.y * hitTex.height); 
 				Color pixel = hitTex.GetPixel (_locX, _locY);
 				int currID = colorClassifier.GetClosestColorId (pixel);
+
+				// Save colors for 3D visualization
 				if (setup)
 					allColors [i + numOfScannersX * j] = pixel;
 				Color minColor;
+
+				// Display 3D colors & use scanned colors for scanner color
 				if (_isCalibrating) {
 					minColor = pixel;
-
 					if (_showDebugColors) {
+						// Could improve by drawing only if sphere locations change
 						Vector3 origin = GameObject.Find ("3D color space").transform.position;
 						Debug.DrawLine (origin + new Vector3 (pixel.r, pixel.g, pixel.b), origin + new Vector3 (sampleColors [currID].r, sampleColors [currID].g, sampleColors [currID].b), pixel, 1, false);
 					}
 				} else 
 					minColor = colorClassifier.GetColor (currID);
 
-				//paint scanner with the found color 
+				// Paint scanner with the found color 
 				scannersList [i, j].GetComponent<Renderer> ().material.color = minColor;
 
+				// Display rays cast at the keystoned quad
 				if (_showRays) {
 					Debug.DrawLine (scannersList [i, j].transform.position, hit.point, pixel, 200, false);
 					Debug.Log (hit.point);
@@ -307,7 +312,7 @@ public class Scanners : MonoBehaviour
 				return currID;
 			}
 		} else { 
-			scannersList [i, j].GetComponent<Renderer> ().material.color = Color.magenta; //paint scanner with Out of bounds  color 
+			scannersList [i, j].GetComponent<Renderer> ().material.color = Color.magenta; //paint scanner with Out of bounds / invalid  color 
 			return -1;
 		}
 	}
@@ -330,10 +335,10 @@ public class Scanners : MonoBehaviour
 	private void SetTexture() {
 		if (_useWebcam) {
 			if (Webcam.isPlaying())
-          {
+	          {
 				_texture.SetPixels((GameObject.Find("CameraKeystoneQuad").GetComponent<Renderer>().material.mainTexture as WebCamTexture).GetPixels()); //for webcam 
-          }
-          else return;
+	          }
+          	else return;
 		}
 		else {
 			_texture.SetPixels ((GameObject.Find("CameraKeystoneQuad").GetComponent<Renderer> ().material.mainTexture as Texture2D).GetPixels ()); // for texture map 
