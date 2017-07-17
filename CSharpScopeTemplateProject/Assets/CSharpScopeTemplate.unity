@@ -678,7 +678,6 @@ MonoBehaviour:
   _showDebugColors: 0
   sampleColors: []
   _numColors: 3
-  _isSampling: 0
   _colorSettingsFileName: sampleColorSettings.json
 --- !u!1 &417744673
 GameObject:
@@ -841,7 +840,7 @@ Camera:
   far clip plane: 5
   field of view: 60
   orthographic: 1
-  orthographic size: 0.4
+  orthographic size: 1
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
