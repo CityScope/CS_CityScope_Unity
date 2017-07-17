@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4481508, g: 0.4981758, b: 0.5754946, a: 1}
+  m_IndirectSpecularColor: {r: 0.44824833, g: 0.49827534, b: 0.57558256, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -414,13 +414,13 @@ Camera:
   far clip plane: 50
   field of view: 60
   orthographic: 1
-  orthographic size: 2
+  orthographic size: 11
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: a36395e141cca486780ba61d8cb8691d, type: 2}
+  m_TargetTexture: {fileID: 8400000, guid: f224c9360b79d47478d2601654721eec, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -441,6 +441,7 @@ Material:
   m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
@@ -671,7 +672,7 @@ MonoBehaviour:
   _gridSizeY: 20
   _refreshRate: 1
   _scannerScale: 0.012
-  _useWebcam: 0
+  _useWebcam: 1
   _showRays: 0
   _debug: 0
   _isCalibrating: 1
@@ -2154,8 +2155,8 @@ MonoBehaviour:
   - {x: 0, y: 1, z: 0}
   selectedCorner: 0
   _spheresScale: 0.01
-  _settingsFileName: keystoneSettings.json
-  _useKeystone: 1
+  _settingsFileName: liveKeystoneSettings.json
+  _useKeystone: 0
   _debug: 0
   id: 0
 --- !u!23 &1489870785
@@ -2301,7 +2302,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: b5686ca37aade47fa9b31f4e2801dadc, type: 2}
+  - {fileID: 2100000, guid: ffa7ea3dfed15fa4992fa22737c94ccf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
