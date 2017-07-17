@@ -166,7 +166,7 @@ public class Scanners : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Sets the sample objects.
+	/// Sets the sample spheres.
 	/// </summary>
 	private void SetupSampleObjects() {
 		sampleColors = new Color[_numColors];
@@ -283,13 +283,18 @@ public class Scanners : MonoBehaviour
 				int _locX = Mathf.RoundToInt (hit.textureCoord.x * hitTex.width);
 				int _locY = Mathf.RoundToInt (hit.textureCoord.y * hitTex.height); 
 				Color pixel = hitTex.GetPixel (_locX, _locY);
-				allColors [i + numOfScannersX * j] = pixel;
 				int currID = colorClassifier.GetClosestColorId (pixel);
+				if (setup)
+					allColors [i + numOfScannersX * j] = pixel;
 				Color minColor;
 				if (_isCalibrating) {
 					minColor = pixel;
-				}
-				else
+
+					if (_showDebugColors) {
+						Vector3 origin = GameObject.Find ("3D color space").transform.position;
+						Debug.DrawLine (origin + new Vector3 (pixel.r, pixel.g, pixel.b), origin + new Vector3 (sampleColors [currID].r, sampleColors [currID].g, sampleColors [currID].b), pixel, 1, false);
+					}
+				} else 
 					minColor = colorClassifier.GetColor (currID);
 
 				//paint scanner with the found color 
@@ -388,8 +393,13 @@ public class Scanners : MonoBehaviour
 		}
 
 		for (int i = 0; i < sampleColors.Length; i++) {
-			colorSettings.id [i] = i;
-			colorSettings.color [i] = sampleColors[i];
+			if (colorSettings.id.Count <= i) {
+				colorSettings.id.Add (i);
+				colorSettings.color.Add (sampleColors [i]);
+			} else {
+				colorSettings.id [i] = i;
+				colorSettings.color [i] = sampleColors [i];
+			}
 		}
 
 		colorSettings.gridPosition = _gridParent.transform.position;
