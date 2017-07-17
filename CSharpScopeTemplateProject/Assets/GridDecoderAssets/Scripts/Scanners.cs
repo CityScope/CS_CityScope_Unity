@@ -10,11 +10,11 @@ using System.Linq;
 public class ColorSettings {
 	// Color sample objects
 	public List<int> id;
-	public List<Vector3> position;
+	public List<Color> color;
 	public Vector3 gridPosition;
 
 	public ColorSettings() {
-		position = new List<Vector3>();
+		color = new List<Color>();
 		id = new List<int> ();
 	}
 }
@@ -26,6 +26,8 @@ public class Scanners : MonoBehaviour
 	public int[,] currentIds;
 
 	public GameObject _gridParent;
+	public GameObject _colorSpaceParent;
+
 	public int _gridSizeX;
 	public int _gridSizeY;
 	private int numOfScannersX;
@@ -52,9 +54,9 @@ public class Scanners : MonoBehaviour
 	ColorSettings colorSettings;
 	ColorClassifier colorClassifier;
 
-	private Dictionary<ColorClassifier.SampleColor, List<GameObject>> sampleCubes;
-
-	public GameObject _colorSamplerParent;
+	private Dictionary<ColorClassifier.SampleColor, GameObject> colorRefSpheres;
+	public Color[] sampleColors;
+	public int _numColors = 3;
 
 	private string colorTexturedQuadName = "KeystonedTextureQuad";
 	public string _colorSettingsFileName = "_sampleColorSettings.json";
@@ -130,16 +132,16 @@ public class Scanners : MonoBehaviour
 		allColors = new Color[numOfScannersX * numOfScannersY];
 		currentIds = new int[numOfScannersX / _gridSize, numOfScannersY / _gridSize];
 		colorClassifier = new ColorClassifier ();
-		SetupSampleObjects ();
 		MakeScanners ();
+		SetupSampleObjects ();
 
 		// Find copy mesh with RenderTexture
 		keystonedQuad = GameObject.Find (colorTexturedQuadName);
 		if (!keystonedQuad)
 			Debug.Log ("Keystoned quad not found.");
 
-		_texture = new Texture2D (GetComponent<Renderer> ().material.mainTexture.width, 
-			GetComponent<Renderer> ().material.mainTexture.height);
+		_texture = new Texture2D (GameObject.Find("CameraKeystoneQuad").GetComponent<Renderer> ().material.mainTexture.width, 
+			GameObject.Find("CameraKeystoneQuad").GetComponent<Renderer> ().material.mainTexture.height);
 
 		LoadSamplers ();
 	}
@@ -148,49 +150,50 @@ public class Scanners : MonoBehaviour
 	/// Calibrates the colors based on sample points.
 	/// </summary>
 	private void CalibrateColors() {
-		foreach (var colorCube in sampleCubes) {
-			for (int i = 0; i < colorCube.Value.Count; i++) {
-				if (Physics.Raycast (colorCube.Value[i].transform.position, Vector3.down, out hit, 60)) {
-					int _locX = Mathf.RoundToInt (hit.textureCoord.x * hitTex.width);
-					int _locY = Mathf.RoundToInt (hit.textureCoord.y * hitTex.height); 
-					Color pixel = hitTex.GetPixel (_locX, _locY);
-					colorCube.Value[i].GetComponent<Renderer> ().material.color = pixel;
-					colorClassifier.SetSampledColors (colorCube.Key, i, pixel);
-				}
-			}
+		foreach (var colorSphere in colorRefSpheres) {
+			UpdateSphereColor (colorSphere.Value);
+			sampleColors [(int)colorSphere.Key] = colorSphere.Value.GetComponent<Renderer> ().material.color;
 		}
+			
+		colorClassifier.SetSampledColors (ColorClassifier.SampleColor.RED, 0, sampleColors[(int)ColorClassifier.SampleColor.RED]);
+		colorClassifier.SetSampledColors (ColorClassifier.SampleColor.BLACK, 0, sampleColors[(int)ColorClassifier.SampleColor.BLACK]);
+		colorClassifier.SetSampledColors (ColorClassifier.SampleColor.WHITE, 0, sampleColors[(int)ColorClassifier.SampleColor.WHITE]);
+	}
+
+
+	private void UpdateSphereColor(GameObject sphere) {
+		sphere.GetComponent<Renderer> ().material.color = new Color(sphere.transform.localPosition.x, sphere.transform.localPosition.y, sphere.transform.localPosition.z);
 	}
 
 	/// <summary>
 	/// Sets the sample objects.
 	/// </summary>
 	private void SetupSampleObjects() {
-		sampleCubes = new Dictionary<ColorClassifier.SampleColor, List<GameObject>> ();
+		sampleColors = new Color[_numColors];
+		sampleColors[(int)ColorClassifier.SampleColor.RED] = Color.red;
+		sampleColors[(int)ColorClassifier.SampleColor.BLACK] = Color.black;
+		sampleColors[(int)ColorClassifier.SampleColor.WHITE] = Color.white;
 
-		GameObject redParent = GameObject.Find ("Red");
-		sampleCubes [ColorClassifier.SampleColor.RED] = new List<GameObject>{};
-		GameObject blackParent = GameObject.Find ("Black");
-		sampleCubes [ColorClassifier.SampleColor.BLACK] = new List<GameObject>{};
-		GameObject whiteParent = GameObject.Find ("White");
-		sampleCubes [ColorClassifier.SampleColor.WHITE] = new List<GameObject>{};
-			
-		setChildren (blackParent, ColorClassifier.SampleColor.BLACK);
-		setChildren (redParent, ColorClassifier.SampleColor.RED);
-		setChildren (whiteParent, ColorClassifier.SampleColor.WHITE);
+		colorRefSpheres = new Dictionary<ColorClassifier.SampleColor, GameObject>();
 
-		foreach (var colorCube in sampleCubes) {
-			for (int i = 0; i < colorCube.Value.Count; i++) {
-				colorCube.Value[i].transform.localScale = new Vector3 (0.1f, 0.1f, 0.1f);
-				colorCube.Value[i].transform.localPosition = new Vector3 (0, 0.1f, 0);
-			}
-		}
+		CreateColorSphere (ColorClassifier.SampleColor.RED, Color.red);
+		CreateColorSphere (ColorClassifier.SampleColor.BLACK, Color.black);
+		CreateColorSphere (ColorClassifier.SampleColor.WHITE, Color.white);
 	}
 
-	private void setChildren(GameObject parent, ColorClassifier.SampleColor sampleColor) {
-		int children = parent.transform.childCount;
-		for (int i = 0; i < children; i++) {
-			sampleCubes [sampleColor].Add(parent.transform.GetChild (i).gameObject);
-		}
+	/// <summary>
+	/// Creates the color spheres for sampling the 3D color space.
+	/// </summary>
+	/// <param name="color">Color.</param>
+	/// <param name="c">C.</param>
+	private void CreateColorSphere(ColorClassifier.SampleColor color, Color c) {
+		float scale = 0.1f;
+		colorRefSpheres[color] = GameObject.CreatePrimitive (PrimitiveType.Sphere);
+		colorRefSpheres[color].name = "sphere_" + color;
+		colorRefSpheres[color].transform.parent = _colorSpaceParent.transform;
+		colorRefSpheres[color].GetComponent<Renderer> ().material.color = c;
+		colorRefSpheres[color].transform.localScale = new Vector3 (scale, scale, scale);  
+		colorRefSpheres[color].transform.localPosition = new Vector3 (c.r, c.g, c.b);
 	}
 
 	/// <summary>
@@ -229,7 +232,10 @@ public class Scanners : MonoBehaviour
 		}
 
 		if (_showDebugColors && setup)
-			colorClassifier.SortColors (allColors);
+			colorClassifier.SortColors (allColors, _colorSpaceParent);
+
+		if (setup)
+			colorClassifier.Create3DColorPlot (allColors, _colorSpaceParent);
 	}
 
 	/// <summary>
@@ -279,7 +285,12 @@ public class Scanners : MonoBehaviour
 				Color pixel = hitTex.GetPixel (_locX, _locY);
 				allColors [i + numOfScannersX * j] = pixel;
 				int currID = colorClassifier.GetClosestColorId (pixel);
-				Color minColor = colorClassifier.GetColor (currID);
+				Color minColor;
+				if (_isCalibrating) {
+					minColor = pixel;
+				}
+				else
+					minColor = colorClassifier.GetColor (currID);
 
 				//paint scanner with the found color 
 				scannersList [i, j].GetComponent<Renderer> ().material.color = minColor;
@@ -315,12 +326,12 @@ public class Scanners : MonoBehaviour
 		if (_useWebcam) {
 			if (Webcam.isPlaying())
           {
-                _texture.SetPixels((GetComponent<Renderer>().material.mainTexture as WebCamTexture).GetPixels()); //for webcam 
+				_texture.SetPixels((GameObject.Find("CameraKeystoneQuad").GetComponent<Renderer>().material.mainTexture as WebCamTexture).GetPixels()); //for webcam 
           }
           else return;
 		}
 		else {
-			_texture.SetPixels ((GetComponent<Renderer> ().material.mainTexture as Texture2D).GetPixels ()); // for texture map 
+			_texture.SetPixels ((GameObject.Find("CameraKeystoneQuad").GetComponent<Renderer> ().material.mainTexture as Texture2D).GetPixels ()); // for texture map 
 		};
 		_texture.Apply ();
 	}
@@ -354,16 +365,13 @@ public class Scanners : MonoBehaviour
 		colorSettings = JsonUtility.FromJson<ColorSettings>(dataAsJson);
 
 		if (colorSettings == null) return;
-		if (colorSettings.position == null) return;
+		if (colorSettings.color == null) return;
 
 		int currId = 0;
-		int index = 0;
-		for (int i = 0; i < colorSettings.position.Count; i++) {
-			if (currId != colorSettings.id [i]) {
-				currId = colorSettings.id [i];
-				index = 0;
-			}
-			sampleCubes [(ColorClassifier.SampleColor)currId] [index++].transform.position = colorSettings.position [i];
+		for (int i = 0; i < colorSettings.color.Count; i++) {
+			sampleColors [i] = colorSettings.color [i];
+			colorRefSpheres [(ColorClassifier.SampleColor)i].GetComponent<Renderer> ().material.color = colorSettings.color [i];
+			colorRefSpheres [(ColorClassifier.SampleColor)i].transform.localPosition = new Vector3 (colorSettings.color [i].r, colorSettings.color [i].g, colorSettings.color [i].b); 
 		}
 			
 		_gridParent.transform.position = colorSettings.gridPosition;
@@ -375,20 +383,13 @@ public class Scanners : MonoBehaviour
 	private void SaveSamplers() {
 		Debug.Log ("Saving color sampling settings to " + _colorSettingsFileName);
 
-		if (colorSettings == null || colorSettings.position == null) {
+		if (colorSettings == null || colorSettings.color == null) {
 			colorSettings = new ColorSettings ();
 		}
 
-		int index = 0;
-		foreach (var cube in sampleCubes) {
-			for (int i = 0; i < cube.Value.Count; i++) {
-				if (colorSettings.position.Count <= index) {
-					colorSettings.position.Add(new Vector3(0, 0, 0));
-					colorSettings.id.Add (0);
-				}
-				colorSettings.id [index] = (int)cube.Key;
-				colorSettings.position [index++] = sampleCubes [cube.Key] [i].transform.position;
-			}
+		for (int i = 0; i < sampleColors.Length; i++) {
+			colorSettings.id [i] = i;
+			colorSettings.color [i] = sampleColors[i];
 		}
 
 		colorSettings.gridPosition = _gridParent.transform.position;
@@ -414,7 +415,6 @@ public class Scanners : MonoBehaviour
 	/// </summary>
 	void OnReload() {
 		Debug.Log ("Color config was reloaded!");
-
 		SetupSampleObjects ();
 		LoadSamplers ();
 	}

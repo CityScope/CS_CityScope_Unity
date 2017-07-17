@@ -12,9 +12,6 @@ public class ColorClassifier {
 	private GameObject[] debugColorObjectsL;
 	Dictionary<int, Vector3> hsvColors;
 
-	private string colorScaleParentName = "Scale visualization";
-	public GameObject colorScaleParent;
-
 	// red, black, white
 	// 0 - white
 	// 1 - black
@@ -23,6 +20,7 @@ public class ColorClassifier {
 	public enum SampleColor { WHITE = 0, BLACK = 1, RED = 2 };
 
 	private Dictionary<SampleColor, List<Vector3>> sampleColors;
+	private GameObject[] colorSpheres;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ColorClassifier"/> class.
@@ -81,6 +79,46 @@ public class ColorClassifier {
 		return currColor;
 	}
 
+	/// <summary>
+	/// Creates the 3D color space visualization.
+	/// </summary>
+	/// <param name="colors">Colors.</param>
+	public void Create3DColorPlot(Color[] colors, GameObject colorSpaceParent) {
+		float r = 0.01f;
+		float multiplier = 1f;
+		float opacity = 0.6f;
+
+		colorSpheres = new GameObject[colors.Length];
+
+		Color currColor;
+		Material m = new Material(Shader.Find("Standard"));
+		m.SetFloat("_Mode", 2);
+		m.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+		m.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+		m.SetInt("_ZWrite", 0);
+		m.DisableKeyword("_ALPHATEST_ON");
+		m.EnableKeyword("_ALPHABLEND_ON");
+		m.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+		m.renderQueue = 3000;
+
+		for (int i = 0; i < colors.Length; i++) {
+			colorSpheres [i] = GameObject.CreatePrimitive (PrimitiveType.Sphere);
+			colorSpheres [i].GetComponent<Renderer> ().material = m;
+			colorSpheres [i].transform.parent = colorSpaceParent.transform;
+			colorSpheres [i].transform.localScale = new Vector3 (r, r, r);
+			colorSpheres [i].transform.localPosition = new Vector3 (colors[i].r * multiplier, colors[i].g * multiplier, colors[i].b * multiplier);
+			currColor = colors [i];
+			currColor.a = opacity;
+			colorSpheres [i].GetComponent<Renderer> ().material.color = currColor;
+			colorSpheres [i].transform.name = "Color sample + " + currColor;
+		}
+	}
+
+	///////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////
+	/// COLOR BARS
+	/// ///////////////////////////////////////////////////
+	/// ///////////////////////////////////////////////////
 
 	/// <summary>
 	/// Sorts the colors.
@@ -97,29 +135,28 @@ public class ColorClassifier {
 		return hsvVector;
 	}
 
-	private void createDebugObjects(int length) {
+	private void CreateDebugObjects(int length, GameObject colorSpaceParent) {
 		if (debugColorObjectsH == null) {
 			float sizeX = 0.005f;
 			float sizeY = 2f;
 			float locationZ = -10;
 
-			colorScaleParent = GameObject.Find (colorScaleParentName);
 			debugColorObjectsH = new GameObject[length];
 			debugColorObjectsL = new GameObject[length];
-			float locationX = colorScaleParent.transform.position.x;
+			float locationX = colorSpaceParent.transform.position.x;
 
 			for (int i = 0; i < length; i++) {
 				debugColorObjectsH [i] = GameObject.CreatePrimitive (PrimitiveType.Quad);
 				debugColorObjectsH [i].transform.localScale = new Vector3 (sizeX, sizeY, 1);  
 				debugColorObjectsH [i].transform.position = new Vector3 (i * sizeX + locationX, 0, locationZ);
 				debugColorObjectsH [i].transform.Rotate (90, 0, 0); 
-				debugColorObjectsH [i].transform.parent = colorScaleParent.transform;
+				debugColorObjectsH [i].transform.parent = colorSpaceParent.transform;
 
 				debugColorObjectsL [i] = GameObject.CreatePrimitive (PrimitiveType.Quad);
 				debugColorObjectsL [i].transform.localScale = new Vector3 (sizeX, sizeY, 1);  
 				debugColorObjectsL [i].transform.position = new Vector3 (i * sizeX + locationX, 0, locationZ + sizeY * 2);
 				debugColorObjectsL [i].transform.Rotate (90, 0, 0); 
-				debugColorObjectsL [i].transform.parent = colorScaleParent.transform;
+				debugColorObjectsL [i].transform.parent = colorSpaceParent.transform;
 			}
 
 			hsvColors = new Dictionary<int, Vector3> ();
@@ -130,8 +167,8 @@ public class ColorClassifier {
 	/// Sorts the colors.
 	/// </summary>
 	/// <param name="colors">Colors.</param>
-	public void SortColors(Color[] colors) {
-		createDebugObjects (colors.Length);
+	public void SortColors(Color[] colors, GameObject colorSpaceParent) {
+		CreateDebugObjects (colors.Length, colorSpaceParent);
 
 		for (int i = 0; i < colors.Length; i++) {
 			hsvColors [i] = ToCustomHSV (colors [i]);
