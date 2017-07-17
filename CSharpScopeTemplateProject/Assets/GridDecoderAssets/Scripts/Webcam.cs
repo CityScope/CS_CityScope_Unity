@@ -18,7 +18,7 @@ public class Webcam : MonoBehaviour
     void Setup()
     {
         Play(); // play camera
-        Renderer renderer = GetComponent<Renderer>();
+		Renderer renderer = GameObject.Find("CameraKeystoneQuad").GetComponent<Renderer> ();
         renderer.material.mainTexture = webcamera; //put cam tex onto quad
         Debug.Log("Webcam assigned and playing: " + webcamera.isPlaying);
     }
