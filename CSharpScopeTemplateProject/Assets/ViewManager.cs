@@ -15,10 +15,11 @@ public class ViewManager : MonoBehaviour {
 	public GameObject[] cameras;
 
 	public void OnViewChanged(int currView) {
-		if (currView == (int)Camera.GRID_UI) {
-			cameras[(int)Camera.GRID_UI].GetComponent<UnityEngine.Camera>().enabled = true;
-		} else {
-			cameras[(int)Camera.GRID_UI].GetComponent<UnityEngine.Camera>().enabled = false;
+		cameras[currView].GetComponent<UnityEngine.Camera>().enabled = true;
+
+		for (int i = 0; i < cameras.Length; i++) {
+			if (i != currView && cameras[i] != null)
+				cameras[i].GetComponent<UnityEngine.Camera>().enabled = false;
 		}
 	}
 
