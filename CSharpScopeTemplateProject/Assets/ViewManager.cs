@@ -3,17 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ViewManager : MonoBehaviour {
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+	public enum Camera
+	{
+		GRID_UI = 0,
+		COLOR_3D = 1,
+		PROJECTION = 2,
+		CITYIO = 3,
+	};
+
+	public GameObject[] cameras;
 
 	public void OnViewChanged(int currView) {
-		if (currView == 0) {
-			GameObject.Find ("Grid_UI_Camera").GetComponent<Camera> ().enabled = true;
+		if (currView == (int)Camera.GRID_UI) {
+			cameras[(int)Camera.GRID_UI].GetComponent<UnityEngine.Camera>().enabled = true;
 		} else {
-			GameObject.Find ("Grid_UI_Camera").GetComponent<Camera> ().enabled = false;
+			cameras[(int)Camera.GRID_UI].GetComponent<UnityEngine.Camera>().enabled = false;
 		}
 	}
 
