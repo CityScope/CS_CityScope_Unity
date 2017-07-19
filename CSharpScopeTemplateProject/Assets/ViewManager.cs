@@ -22,6 +22,4 @@ public class ViewManager : MonoBehaviour {
 				cameras[i].GetComponent<UnityEngine.Camera>().enabled = false;
 		}
 	}
-
-
 }

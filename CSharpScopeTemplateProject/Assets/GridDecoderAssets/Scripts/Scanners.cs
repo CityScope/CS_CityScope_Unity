@@ -111,7 +111,6 @@ public class Scanners : MonoBehaviour
 
 			if (Time.frameCount % 60 == 0)
 				System.GC.Collect();
-
 		}
 	}
 
@@ -215,7 +214,8 @@ public class Scanners : MonoBehaviour
 
 				if (idList.ContainsKey (key)) {
 					currentIds [i / _gridSize, j / _gridSize] = (int)idList [key];
-				} else { // check rotation independence
+				} 
+				else { // check rotation independence
 					bool isRotation = false;
 					string keyConcat = key + key;
 					foreach(string idKey in idList.Keys) {
