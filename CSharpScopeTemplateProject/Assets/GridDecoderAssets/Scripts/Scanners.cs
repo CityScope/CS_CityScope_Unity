@@ -22,8 +22,8 @@ public class ColorSettings {
 public class Scanners : MonoBehaviour
 {
 
-	private const int BUFFER_SIZE = 50;
-
+	public int _bufferSize = 50;
+	public bool _useBuffer;
 
 	// webcam and scanner vars
 	public static GameObject[,] scannersList;
@@ -37,7 +37,6 @@ public class Scanners : MonoBehaviour
 	private int numOfScannersX;
 	private int numOfScannersY;
 	private Queue<int>[] idBuffer;
-	public bool _useBuffer;
 
 	private GameObject _scanner;
 	RaycastHit hit;
@@ -336,7 +335,7 @@ public class Scanners : MonoBehaviour
 		if (idBuffer [index] == null)
 			idBuffer [index] = new Queue<int> ();
 
-		if (idBuffer [index].Count < BUFFER_SIZE)
+		if (idBuffer [index].Count < _bufferSize)
 			idBuffer [index].Enqueue (currID);
 		else {
 			idBuffer [index].Dequeue ();
