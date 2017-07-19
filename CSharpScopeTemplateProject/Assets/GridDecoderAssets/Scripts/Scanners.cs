@@ -21,6 +21,10 @@ public class ColorSettings {
 
 public class Scanners : MonoBehaviour
 {
+
+	private const int BUFFER_SIZE = 50;
+
+
 	// webcam and scanner vars
 	public static GameObject[,] scannersList;
 	public int[,] currentIds;
@@ -32,6 +36,8 @@ public class Scanners : MonoBehaviour
 	public int _gridSizeY;
 	private int numOfScannersX;
 	private int numOfScannersY;
+	private Queue<int>[] idBuffer;
+	public bool _useBuffer;
 
 	private GameObject _scanner;
 	RaycastHit hit;
@@ -131,6 +137,8 @@ public class Scanners : MonoBehaviour
 		allColors = new Color[numOfScannersX * numOfScannersY];
 		currentIds = new int[numOfScannersX / _gridSize, numOfScannersY / _gridSize];
 		colorClassifier = new ColorClassifier ();
+		idBuffer = new Queue<int>[numOfScannersX * numOfScannersY];
+
 		MakeScanners ();
 		SetupSampleObjects ();
 
@@ -285,6 +293,9 @@ public class Scanners : MonoBehaviour
 				Color pixel = hitTex.GetPixel (_locX, _locY);
 				int currID = colorClassifier.GetClosestColorId (pixel);
 
+				if (_useBuffer)
+					currID = GetIdAverage (i, j, currID);
+
 				// Save colors for 3D visualization
 				if (setup)
 					allColors [i + numOfScannersX * j] = pixel;
@@ -301,20 +312,38 @@ public class Scanners : MonoBehaviour
 				} else 
 					minColor = colorClassifier.GetColor (currID);
 
-				// Paint scanner with the found color 
-				scannersList [i, j].GetComponent<Renderer> ().material.color = minColor;
-
 				// Display rays cast at the keystoned quad
 				if (_showRays) {
 					Debug.DrawLine (scannersList [i, j].transform.position, hit.point, pixel, 200, false);
 					Debug.Log (hit.point);
 				}
+
+				// Paint scanner with the found color 
+				scannersList [i, j].GetComponent<Renderer> ().material.color = minColor;
+
 				return currID;
 			}
 		} else { 
 			scannersList [i, j].GetComponent<Renderer> ().material.color = Color.magenta; //paint scanner with Out of bounds / invalid  color 
 			return -1;
 		}
+	}
+
+
+	private int GetIdAverage (int i, int j, int currID) {
+		int index = i * numOfScannersX + j;
+
+		if (idBuffer [index] == null)
+			idBuffer [index] = new Queue<int> ();
+
+		if (idBuffer [index].Count < BUFFER_SIZE)
+			idBuffer [index].Enqueue (currID);
+		else {
+			idBuffer [index].Dequeue ();
+			idBuffer [index].Enqueue (currID);
+		}
+
+		return (int) (idBuffer [index].Average ());
 	}
 
 	/// <summary>
