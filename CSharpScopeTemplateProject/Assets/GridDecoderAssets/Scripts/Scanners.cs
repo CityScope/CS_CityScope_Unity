@@ -1,9 +1,15 @@
-﻿using System;
+﻿/// <summary>
+/// Scanners samples a 2D quad with a set of objects on a grid. 
+/// 
+/// </summary>
+
+using System;
 using UnityEditor;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 
 [System.Serializable]
@@ -12,6 +18,7 @@ public class ColorSettings {
 	public List<int> id;
 	public List<Color> color;
 	public Vector3 gridPosition;
+	public Vector3 dockPosition;
 
 	public ColorSettings() {
 		color = new List<Color>();
@@ -21,6 +28,7 @@ public class ColorSettings {
 
 public class Scanners : MonoBehaviour
 {
+	private Thread scannerThread;
 
 	public int _bufferSize = 50;
 	public bool _useBuffer;
@@ -38,11 +46,19 @@ public class Scanners : MonoBehaviour
 	private int numOfScannersY;
 	private Queue<int>[] idBuffer;
 
+	// Scanner objects
 	private GameObject _scanner;
+
+	// UI scanners
+	private Dock dock;
+	private LegoSlider slider;
+	public int _sliderRange = 30;
+
 	RaycastHit hit;
 	RenderTexture rTex;
 	Texture2D _texture;
 	GameObject keystonedQuad;
+	GameObject cameraKeystonedQuad;
 
 	public float _refreshRate = 1;
 	public float _scannerScale = 0.5f;
@@ -70,8 +86,6 @@ public class Scanners : MonoBehaviour
 
 	private Color[] allColors;
 
-	enum Brick { RL = 0, RM = 1, RS = 2, OL = 3, OM = 4, OS = 5, ROAD = 6 };
-
 	private Dictionary<string, Brick> idList = new Dictionary<string, Brick>
 	{
 		{ "2000", Brick.RL },
@@ -89,34 +103,49 @@ public class Scanners : MonoBehaviour
 			if (!GetComponent<Webcam> ().enabled)
 				GetComponent<Webcam> ().enabled = true;
 		}
+		 
+		scannerThread = new Thread(UpdateScanners);
+		scannerThread.Start ();
 
 		InitVariables ();
+
 		EventManager.StartListening ("reload", OnReload);
 		EventManager.StartListening ("save", OnSave);
 			
 		while (true) {
-			yield return new WaitForEndOfFrame ();
-			SetTexture ();
+			////
+			//// Wait one frame for GPU
+			//// http://answers.unity3d.com/questions/465409/reading-from-a-rendertexture-is-slow-how-to-improv.html
+			////
 			yield return new WaitForSeconds (_refreshRate);
-
 			// Assign render texture from keystoned quad texture copy & copy it to a Texture2D
 			AssignRenderTexture();
+			yield return new WaitForEndOfFrame ();
 
-			if (_isCalibrating || setup)
-				CalibrateColors ();
-
-			// Assign scanner colors
-			ScanColors();
-
-			if (_debug)
-				PrintMatrix ();
-			
-			if (setup)
-				setup = false;
-
-			if (Time.frameCount % 60 == 0)
-				System.GC.Collect();
+			UpdateScanners ();
 		}
+	}
+
+	private void UpdateScanners() {
+
+		if (_isCalibrating || setup)
+			CalibrateColors ();
+
+		// Assign scanner colors
+		ScanColors();
+
+		// Update slider & dock readings
+		dock.UpdateDock();
+		slider.UpdateSlider ();
+
+		if (_debug)
+			PrintMatrix ();
+
+		if (setup)
+			setup = false;
+
+		if (Time.frameCount % 60 == 0)
+			System.GC.Collect();
 	}
 
 	/// <summary>
@@ -141,15 +170,22 @@ public class Scanners : MonoBehaviour
 		MakeScanners ();
 		SetupSampleObjects ();
 
-		// Find copy mesh with RenderTexture
+		// Create UX scanners
+		dock = new Dock (this.gameObject, _gridSize, _scannerScale);
+		slider = new LegoSlider (this.gameObject, _scannerScale, _sliderRange);
+
+		// Original keystoned object with webcam texture / video
+		cameraKeystonedQuad = GameObject.Find("CameraKeystoneQuad");
+
+		// Copy mesh with RenderTexture
 		keystonedQuad = GameObject.Find (colorTexturedQuadName);
-		if (!keystonedQuad)
-			Debug.Log ("Keystoned quad not found.");
 
-		_texture = new Texture2D (GameObject.Find("CameraKeystoneQuad").GetComponent<Renderer> ().material.mainTexture.width, 
-			GameObject.Find("CameraKeystoneQuad").GetComponent<Renderer> ().material.mainTexture.height);
+		_texture = new Texture2D (cameraKeystonedQuad.GetComponent<Renderer> ().material.mainTexture.width, 
+			cameraKeystonedQuad.GetComponent<Renderer> ().material.mainTexture.height);
 
-		LoadSamplers ();
+		LoadScannerSettings ();
+
+		EventManager.TriggerEvent ("scannersInitialized");
 	}
 
 	/// <summary>
@@ -209,32 +245,7 @@ public class Scanners : MonoBehaviour
 		string key = "";
 		for (int i = 0; i < numOfScannersX; i += _gridSize) {
 			for (int j = 0; j < numOfScannersY; j += _gridSize) {
-				key = "";
-				for (int k = 0; k < _gridSize; k++) {
-					for (int m = 0; m < _gridSize; m++) {
-						key += FindColor (i + k, j + m); 
-					}
-				} 
-					
-				// keys read counterclockwise
-				key = new string(key.ToCharArray().Reverse().ToArray());
-
-				if (idList.ContainsKey (key)) {
-					currentIds [i / _gridSize, j / _gridSize] = (int)idList [key];
-				} 
-				else { // check rotation independence
-					bool isRotation = false;
-					string keyConcat = key + key;
-					foreach(string idKey in idList.Keys) {
-						if (keyConcat.Contains (idKey)) {
-							currentIds [i / _gridSize, j / _gridSize] = (int)idList [idKey];
-							isRotation = true;
-							break;
-						}
-					}
-					if (!isRotation)
-						currentIds [i / _gridSize, j / _gridSize] = -1;
-				}
+				currentIds [i / _gridSize, j / _gridSize] = FindCurrentId(key, i, j, ref scannersList, true);
 			}
 		}
 
@@ -244,6 +255,96 @@ public class Scanners : MonoBehaviour
 		if (setup)
 			colorClassifier.Create3DColorPlot (allColors, _colorSpaceParent);
 	}
+
+
+	/// <summary>
+	/// Finds the current id for a block at i, j in the grid or for the dock module.
+	/// </summary>
+	/// <returns>The current identifier.</returns>
+	/// <param name="key">Key.</param>
+	/// <param name="i">The index.</param>
+	/// <param name="j">J.</param>
+	public int FindCurrentId(string key, int i, int j, ref GameObject[,] currScanners, bool isGrid = true) {
+		key = "";
+		for (int k = 0; k < _gridSize; k++) {
+			for (int m = 0; m < _gridSize; m++) {
+				key += FindColor (i + k, j + m, ref currScanners, isGrid); 
+			}
+		} 
+
+		// keys read counterclockwise
+		key = new string(key.ToCharArray().Reverse().ToArray());
+
+		if (idList.ContainsKey (key)) {
+			return (int)idList [key];
+		} 
+		else { // check rotation independence & return key if it is a rotation
+			string keyConcat = key + key;
+			foreach(string idKey in idList.Keys) {
+				if (keyConcat.Contains (idKey))
+					return (int)idList [idKey];
+			}
+		}
+		return -1;
+	}
+
+	/// <summary>
+	/// Finds the color below scanner item[i, j].
+	/// </summary>
+	/// <param name="i">The row index.</param>
+	/// <param name="j">The column index.</param>
+	public int FindColor(int i, int j, ref GameObject[,] currScanners, bool isGrid = true) {
+		if (Physics.Raycast (currScanners [i, j].transform.position, Vector3.down, out hit, 6)) {
+			// Get local tex coords w.r.t. triangle
+			if (!hitTex) {
+				Debug.Log ("No hit texture");
+				currScanners [i, j].GetComponent<Renderer> ().material.color = Color.magenta;
+				return -1;
+			} else {
+				int _locX = Mathf.RoundToInt (hit.textureCoord.x * hitTex.width);
+				int _locY = Mathf.RoundToInt (hit.textureCoord.y * hitTex.height); 
+				Color pixel = hitTex.GetPixel (_locX, _locY);
+				int currID = colorClassifier.GetClosestColorId (pixel);
+
+				if (isGrid) {
+					if (_useBuffer)
+						currID = GetIdAverage (i, j, currID);
+
+					// Save colors for 3D visualization
+					if (setup)
+						allColors [i + numOfScannersX * j] = pixel;
+				}
+
+				Color minColor;
+
+				// Display 3D colors & use scanned colors for scanner color
+				if (_isCalibrating && isGrid) {
+					minColor = pixel;
+					if (_showDebugColors) {
+						// Could improve by drawing only if sphere locations change
+						Vector3 origin = _colorSpaceParent.transform.position;
+						Debug.DrawLine (origin + new Vector3 (pixel.r, pixel.g, pixel.b), origin + new Vector3 (sampleColors [currID].r, sampleColors [currID].g, sampleColors [currID].b), pixel, 1, false);
+					}
+				} else 
+					minColor = colorClassifier.GetColor (currID);
+
+				// Display rays cast at the keystoned quad
+				if (_showRays) {
+					Debug.DrawLine (scannersList [i, j].transform.position, hit.point, pixel, 200, false);
+					Debug.Log (hit.point);
+				}
+
+				// Paint scanner with the found color 
+				currScanners [i, j].GetComponent<Renderer> ().material.color = minColor;
+
+				return currID;
+			}
+		} else { 
+			currScanners [i, j].GetComponent<Renderer> ().material.color = Color.magenta; //paint scanner with Out of bounds / invalid  color 
+			return -1;
+		}
+	}
+
 
 	/// <summary>
 	/// Prints the ID matrix.
@@ -268,67 +369,10 @@ public class Scanners : MonoBehaviour
 		Debug.Log (matrix);
 	}
 
-	public int[,] GetCurrentIds() {
-		int[,] ids = currentIds.Clone () as int[,];
-		return ids;
-	}
-
 	/// <summary>
-	/// Finds the color below scanner item[i, j].
+	/// Gets the average color ID from a given number of readings defined by _bufferSize
+	/// to reduce flickering in reading of video stream.
 	/// </summary>
-	/// <param name="i">The row index.</param>
-	/// <param name="j">The column index.</param>
-	private int FindColor(int i, int j) {
-		if (Physics.Raycast (scannersList [i, j].transform.position, Vector3.down, out hit, 6)) {
-			// Get local tex coords w.r.t. triangle
-
-			if (!hitTex) {
-				Debug.Log ("No hit texture");
-				scannersList [i, j].GetComponent<Renderer> ().material.color = Color.magenta;
-				return -1;
-			} else {
-				int _locX = Mathf.RoundToInt (hit.textureCoord.x * hitTex.width);
-				int _locY = Mathf.RoundToInt (hit.textureCoord.y * hitTex.height); 
-				Color pixel = hitTex.GetPixel (_locX, _locY);
-				int currID = colorClassifier.GetClosestColorId (pixel);
-
-				if (_useBuffer)
-					currID = GetIdAverage (i, j, currID);
-
-				// Save colors for 3D visualization
-				if (setup)
-					allColors [i + numOfScannersX * j] = pixel;
-				Color minColor;
-
-				// Display 3D colors & use scanned colors for scanner color
-				if (_isCalibrating) {
-					minColor = pixel;
-					if (_showDebugColors) {
-						// Could improve by drawing only if sphere locations change
-						Vector3 origin = GameObject.Find ("3D color space").transform.position;
-						Debug.DrawLine (origin + new Vector3 (pixel.r, pixel.g, pixel.b), origin + new Vector3 (sampleColors [currID].r, sampleColors [currID].g, sampleColors [currID].b), pixel, 1, false);
-					}
-				} else 
-					minColor = colorClassifier.GetColor (currID);
-
-				// Display rays cast at the keystoned quad
-				if (_showRays) {
-					Debug.DrawLine (scannersList [i, j].transform.position, hit.point, pixel, 200, false);
-					Debug.Log (hit.point);
-				}
-
-				// Paint scanner with the found color 
-				scannersList [i, j].GetComponent<Renderer> ().material.color = minColor;
-
-				return currID;
-			}
-		} else { 
-			scannersList [i, j].GetComponent<Renderer> ().material.color = Color.magenta; //paint scanner with Out of bounds / invalid  color 
-			return -1;
-		}
-	}
-
-
 	private int GetIdAverage (int i, int j, int currID) {
 		int index = i * numOfScannersX + j;
 
@@ -350,7 +394,7 @@ public class Scanners : MonoBehaviour
 	/// </summary>
 	/// <returns>The render texture as Texture2D.</returns>
 	private void AssignRenderTexture() {
-		RenderTexture rt = GameObject.Find (colorTexturedQuadName).transform.GetComponent<Renderer> ().material.mainTexture as RenderTexture;
+		RenderTexture rt = keystonedQuad.transform.GetComponent<Renderer> ().material.mainTexture as RenderTexture;
 		RenderTexture.active = rt;
 		if (!hitTex)
 			hitTex = new Texture2D (rt.width, rt.height, TextureFormat.RGB24, false);
@@ -358,18 +402,18 @@ public class Scanners : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Sets the texture.
+	/// Sets the texture from a static image or from the webcam.
 	/// </summary>
 	private void SetTexture() {
 		if (_useWebcam) {
 			if (Webcam.isPlaying())
 	          {
-				_texture.SetPixels((GameObject.Find("CameraKeystoneQuad").GetComponent<Renderer>().material.mainTexture as WebCamTexture).GetPixels()); //for webcam 
+				_texture.SetPixels((cameraKeystonedQuad.GetComponent<Renderer>().material.mainTexture as WebCamTexture).GetPixels()); //for webcam 
 	          }
           	else return;
 		}
 		else {
-			_texture.SetPixels ((GameObject.Find("CameraKeystoneQuad").GetComponent<Renderer> ().material.mainTexture as Texture2D).GetPixels ()); // for texture map 
+			_texture.SetPixels ((cameraKeystonedQuad.GetComponent<Renderer> ().material.mainTexture as Texture2D).GetPixels ()); // for texture map 
 		};
 		_texture.Apply ();
 	}
@@ -396,16 +440,20 @@ public class Scanners : MonoBehaviour
 	/// <summary>
 	/// Loads the color sampler objects from a JSON.
 	/// </summary>
-	private void LoadSamplers() {
+	private void LoadScannerSettings() {
 		Debug.Log ("Loading color sampling settings from  " + _colorSettingsFileName);
 
 		string dataAsJson = JsonParser.loadJSON (_colorSettingsFileName, _debug);
+		if (String.IsNullOrEmpty(dataAsJson)) {
+			Debug.Log ("No such file: " + _colorSettingsFileName);
+			return;
+		}
+
 		colorSettings = JsonUtility.FromJson<ColorSettings>(dataAsJson);
 
 		if (colorSettings == null) return;
 		if (colorSettings.color == null) return;
 
-		int currId = 0;
 		for (int i = 0; i < colorSettings.color.Count; i++) {
 			sampleColors [i] = colorSettings.color [i];
 			colorRefSpheres [(ColorClassifier.SampleColor)i].GetComponent<Renderer> ().material.color = colorSettings.color [i];
@@ -413,13 +461,15 @@ public class Scanners : MonoBehaviour
 		}
 			
 		_gridParent.transform.position = colorSettings.gridPosition;
+
+		dock.SetDockPosition (colorSettings.dockPosition);
 	}
 
 	/// <summary>
-	/// Saves the color sampler objects to a JSON.
+	/// Saves the sampler objects (color & dock etc positions) to a JSON.
 	/// </summary>
-	private void SaveSamplers() {
-		Debug.Log ("Saving color sampling settings to " + _colorSettingsFileName);
+	private void SaveScannerSettings() {
+		Debug.Log ("Saving scanner settings to " + _colorSettingsFileName);
 
 		if (colorSettings == null || colorSettings.color == null) {
 			colorSettings = new ColorSettings ();
@@ -436,6 +486,7 @@ public class Scanners : MonoBehaviour
 		}
 
 		colorSettings.gridPosition = _gridParent.transform.position;
+		colorSettings.dockPosition = dock.GetDockPosition ();
 
 		string dataAsJson = JsonUtility.ToJson (colorSettings);
 		JsonParser.writeJSON (_colorSettingsFileName, dataAsJson);
@@ -446,10 +497,10 @@ public class Scanners : MonoBehaviour
 	/// </summary>
 	private void onKeyPressed ()
 	{
-		if (Input.GetKey (KeyCode.S) && _isCalibrating) {
-			SaveSamplers ();
+		if (Input.GetKey (KeyCode.S)) {
+			SaveScannerSettings ();
 		} else if (Input.GetKey (KeyCode.L)) {
-			LoadSamplers ();
+			LoadScannerSettings ();
 		}
 	}
 
@@ -457,13 +508,41 @@ public class Scanners : MonoBehaviour
 	/// Reloads configuration / keystone settings when the scene is refreshed.
 	/// </summary>
 	void OnReload() {
-		Debug.Log ("Color config was reloaded!");
+		Debug.Log ("Scanner config was reloaded!");
 		SetupSampleObjects ();
-		LoadSamplers ();
+		LoadScannerSettings ();
 	}
 
 	public void OnSave() {
-		SaveSamplers ();
+		SaveScannerSettings ();
 	}
 
+	/////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////
+	/// 
+	/// GETTERS
+	/// 
+	/////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////
+
+	/// <summary>
+	/// Gets the current identifiers.
+	/// </summary>
+	/// <returns>The current identifiers.</returns>
+	public int[,] GetCurrentIds() {
+		int[,] ids = currentIds.Clone () as int[,];
+		return ids;
+	}
+
+	public Vector2 GetGridDimensions() {
+		return (new Vector2 (numOfScannersX * 0.5f, numOfScannersY * 0.5f));
+	}
+
+	public int GetDockId() {
+		return this.dock.GetDockId ();
+	}
+
+	public int GetSliderValue() {
+		return this.slider.GetSliderValue ();
+	}
 }
