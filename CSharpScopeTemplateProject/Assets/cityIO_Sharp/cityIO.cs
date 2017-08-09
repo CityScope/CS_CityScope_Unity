@@ -378,12 +378,10 @@ public class cityIO : MonoBehaviour
 
 	public void OnSliderChanged() {
 		uiChanged = true;
-		Debug.Log ("Slider value changed.");
 	}
 
 	public void OnDockChanged() {
 		uiChanged = true;
-		Debug.Log ("Dock value changed.");
 	}
 
 }
