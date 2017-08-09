@@ -42,7 +42,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 11
   m_GIWorkflowMode: 0
   m_GISettings:
     serializedVersion: 2
@@ -54,7 +54,7 @@ LightmapSettings:
     m_EnableBakedLightmaps: 1
     m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
-    serializedVersion: 8
+    serializedVersion: 9
     m_Resolution: 2
     m_BakeResolution: 40
     m_TextureWidth: 1024
@@ -87,7 +87,7 @@ LightmapSettings:
     m_PVRFilteringAtrousNormalSigma: 1
     m_PVRFilteringAtrousPositionSigma: 1
   m_LightingDataAsset: {fileID: 0}
-  m_ShadowMaskMode: 2
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -549,6 +549,7 @@ Material:
   m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
@@ -773,10 +774,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87cc6b82c02114afbb1df246bf55c34e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _bufferSize: 50
+  _useBuffer: 0
   _gridParent: {fileID: 1163447381}
   _colorSpaceParent: {fileID: 136326348}
   _gridSizeX: 20
   _gridSizeY: 20
+  _sliderRange: 30
   _refreshRate: 1
   _scannerScale: 0.012
   _useWebcam: 0
@@ -1785,6 +1789,20 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
+  m_FalloffTable:
+    m_Table[0]: 0
+    m_Table[1]: 0
+    m_Table[2]: 0
+    m_Table[3]: 0
+    m_Table[4]: 0
+    m_Table[5]: 0
+    m_Table[6]: 0
+    m_Table[7]: 0
+    m_Table[8]: 0
+    m_Table[9]: 0
+    m_Table[10]: 0
+    m_Table[11]: 0
+    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -3607,6 +3625,7 @@ MonoBehaviour:
     grid: []
     objects:
       slider1: 0
+      slider2: 0
       toggle1: 0
       toggle2: 0
       toggle3: 0
@@ -3621,7 +3640,8 @@ MonoBehaviour:
     id: 
     timestamp: 0
   _gridHolder: {fileID: 374258298}
-  textMeshPrefab: {fileID: 0}
+  textMeshPrefab: {fileID: 1457066846111462, guid: dfc34f4bc7c33413ba53f73a233bfade,
+    type: 2}
   colors:
   - {r: 1, g: 1, b: 1, a: 0}
   - {r: 1, g: 1, b: 1, a: 0}
