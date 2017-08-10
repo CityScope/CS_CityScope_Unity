@@ -70,7 +70,12 @@ public class KeystoneController : MonoBehaviour
 	
 		mesh = GetComponent<MeshFilter> ().mesh; // get this GO mesh
 		mesh.triangles = new int[] { 0, 1, 2, 0, 2, 3 };
+
 		debugIntersectionSphere = GameObject.CreatePrimitive (PrimitiveType.Sphere);
+		debugIntersectionSphere.SetActive (false);
+		debugIntersectionSphere.transform.parent = this.transform;
+		debugIntersectionSphere.name = "Debug shader sphere";
+
 		LoadSettings ();
 
 		CornerMaker (); //make the corners for visual controls 
@@ -153,6 +158,7 @@ public class KeystoneController : MonoBehaviour
 		Vector2 pIntersection = p1 + mua * V1;
 
 		if (_debug) {
+			debugIntersectionSphere.SetActive (true);
 			debugIntersectionSphere.transform.position = pIntersection;
 			debugIntersectionSphere.transform.localScale = new Vector3 (0.1f, 0.1f, 0.1f);
 			debugIntersectionSphere.GetComponent<Renderer> ().material.color = Color.green;
@@ -194,9 +200,8 @@ public class KeystoneController : MonoBehaviour
 	private void onOffObjects (bool visible)
 	{
 		for (int i = 0; i < vertices.Length; i++) {
-			GameObject sphere = _corners [i];
-			sphere.transform.position = transform.TransformPoint (vertices [i]);
-			sphere.SetActive (visible);
+			_corners [i].transform.position = transform.TransformPoint (vertices [i]);
+			_corners [i].SetActive (visible);
 		}
 	}
 

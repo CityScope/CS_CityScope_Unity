@@ -64,7 +64,6 @@
      <Compile Include="Assets\GridDecoderAssets\Scripts\Scanners.cs" />
      <Compile Include="Assets\GridDecoderAssets\Scripts\Slider.cs" />
      <Compile Include="Assets\GridDecoderAssets\Scripts\Webcam.cs" />
-     <Compile Include="Assets\HeatMaps.cs" />
      <Compile Include="Assets\ViewManager.cs" />
      <None Include="Assets\GridDecoderAssets\Shaders\Affine UV fix.shader" />
  <Reference Include="UnityEngine.UI">
