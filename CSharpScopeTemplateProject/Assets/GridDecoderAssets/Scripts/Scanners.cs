@@ -50,6 +50,7 @@ public class Scanners : MonoBehaviour
 	private GameObject _scanner;
 
 	// UI scanners
+	public bool _enableUI = false;
 	private Dock dock;
 	private LegoSlider slider;
 	public int _sliderRange = 30;
@@ -135,8 +136,10 @@ public class Scanners : MonoBehaviour
 		ScanColors();
 
 		// Update slider & dock readings
-		dock.UpdateDock();
-		slider.UpdateSlider ();
+		if (_enableUI) {
+			dock.UpdateDock();
+			slider.UpdateSlider ();
+		}
 
 		if (_debug)
 			PrintMatrix ();
