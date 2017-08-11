@@ -4,7 +4,7 @@ Shader "Custom/Affine UV fix Cg" {
  
     Properties {
         _MainTex ("Base (RGB)", 2D) = "white" {}
-        _Brightness ("Brightness", Range(0,1)) = 0.5
+        _Brightness ("Brightness", Range(0,1)) = 0.0
 		_Contrast ("Contrast", Range(0,2)) = 1.0
     }
  

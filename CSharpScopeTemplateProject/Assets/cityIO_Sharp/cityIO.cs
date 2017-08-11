@@ -62,6 +62,7 @@ public class cityIO : MonoBehaviour
     /// </summary>
     public Material _material;
     public Table _table;
+	public bool _sendData;
 
 	private bool uiChanged = false;
     /// <summary> 
@@ -122,7 +123,9 @@ public class cityIO : MonoBehaviour
 				UpdateTableFromUrl ();
             }
             else
-			{ // for app data _gridHolder.transform.name
+			{ // for app data 
+				if (_sendData)
+					SendData ();
 				UpdateTableInternal();
             }
         }
@@ -162,15 +165,49 @@ public class cityIO : MonoBehaviour
 
 		// Update Grid values
 		bool update = _table.CreateGridFromDecoder("ScannersParent");
+
 		_newCityioDataFlag = true;
 		if (_table.grid != null && (update || uiChanged)) {
 			EventManager.TriggerEvent ("updateData");
+			if (_sendData)
+				SendData ();
 			DrawTable();
 		}
 
 		if (uiChanged)
 			uiChanged = false;
 	}
+
+	private void SendData() {
+		string newData = _table.WriteToJSON ();
+
+		string postScoreURL = "https://cityio.media.mit.edu/api/update/testtable";
+
+		System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
+		Hashtable postHeader = new Hashtable();
+
+		postHeader.Add("Content-Type", "text/plain");
+
+		//Debug.Log("jsonString: " + newData);
+
+		WWW request = new WWW(postScoreURL, encoding.GetBytes(newData), postHeader);
+
+		StartCoroutine(WaitForWWW(request));
+	}
+
+	IEnumerator WaitForWWW(WWW www)
+	{
+		yield return www;
+
+		string txt = "";
+		if (string.IsNullOrEmpty(www.error))
+			txt = www.text;  //text of success
+		else
+			txt = www.error;  //error
+
+		Debug.Log ("jsonString: " + txt);
+	}
+
 
 	public bool ShouldUpdateGrid(int index) {
 		return (_table.grid [index].update || uiChanged);
@@ -305,7 +342,7 @@ public class cityIO : MonoBehaviour
 		UpdateTable ();
     }
 
-    private void AddBuildingTypeText(int i, float height) //mesh type text metod 
+    private void AddBuildingTypeText(int i, float height) //mesh type text method 
     {
 		if (textMeshes == null) 
 			textMeshes = new GameObject[_table.grid.Count];

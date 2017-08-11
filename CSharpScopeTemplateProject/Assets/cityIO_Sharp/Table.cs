@@ -134,4 +134,9 @@ public class Table
 		this.objects.SetDockId (scanners.GetDockId());
 		this.objects.SetSlider (scanners.GetSliderValue());
 	}
+
+	public string WriteToJSON()
+	{
+		return JsonUtility.ToJson (this);
+	}
 }
