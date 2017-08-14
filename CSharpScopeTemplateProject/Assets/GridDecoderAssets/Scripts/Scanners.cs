@@ -127,6 +127,10 @@ public class Scanners : MonoBehaviour
 		}
 	}
 
+	public void ToggleCalibration() {
+		this._isCalibrating = !this._isCalibrating;
+	}
+
 	private void UpdateScanners() {
 
 		if (_isCalibrating || setup)
