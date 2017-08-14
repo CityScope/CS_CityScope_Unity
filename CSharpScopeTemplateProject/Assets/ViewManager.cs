@@ -13,6 +13,11 @@ public class ViewManager : MonoBehaviour {
 
 	public GameObject[] cameras;
 
+	// Set initial view to the projection view
+	void Awake() {
+		cameras[(int) Camera.PROJECTION].GetComponent<UnityEngine.Camera>().enabled = true;
+	}
+
 	public void OnViewChanged(int currView) {
 		cameras[currView].GetComponent<UnityEngine.Camera>().enabled = true;
 		for (int i = 0; i < cameras.Length; i++) {

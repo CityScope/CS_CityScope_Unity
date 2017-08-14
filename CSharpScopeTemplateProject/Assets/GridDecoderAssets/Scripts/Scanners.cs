@@ -510,7 +510,7 @@ public class Scanners : MonoBehaviour
 	/// <summary>
 	/// Reloads configuration / keystone settings when the scene is refreshed.
 	/// </summary>
-	void OnReload() {
+	public void OnReload() {
 		Debug.Log ("Scanner config was reloaded!");
 		SetupSampleObjects ();
 		LoadScannerSettings ();

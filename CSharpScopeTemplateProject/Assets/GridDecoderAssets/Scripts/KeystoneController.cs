@@ -304,7 +304,7 @@ public class KeystoneController : MonoBehaviour
 	/// <summary>
 	/// Reloads configuration / keystone settings when the scene is refreshed.
 	/// </summary>
-	void OnReload() {
+	public void OnReload() {
 		Debug.Log ("Keystone config was reloaded!");
 		LoadSettings ();
 	}
