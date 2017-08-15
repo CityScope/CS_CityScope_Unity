@@ -122,7 +122,6 @@ public class Scanners : MonoBehaviour
 			// Assign render texture from keystoned quad texture copy & copy it to a Texture2D
 			AssignRenderTexture();
 			yield return new WaitForEndOfFrame ();
-
 			UpdateScanners ();
 		}
 	}
