@@ -19,6 +19,8 @@ public class Webcam : MonoBehaviour
 		}
 		else {
 			Play ();
+			Renderer renderer = webcamQuad.GetComponent<Renderer> ();
+			renderer.material.mainTexture = webcamera;
 			Debug.Log("Webcam restarted.");
 		}
 

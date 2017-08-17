@@ -126,8 +126,8 @@ public class Scanners : MonoBehaviour
 			////
 			yield return new WaitForSeconds (_refreshRate);
 			// Assign render texture from keystoned quad texture copy & copy it to a Texture2D
-			if (_useWebcam || shouldReassignTexture)
-				AssignRenderTexture ();
+			//if (_useWebcam || shouldReassignTexture)
+			AssignRenderTexture ();
 			yield return new WaitForEndOfFrame ();
 			UpdateScanners ();
 		}
@@ -299,6 +299,9 @@ public class Scanners : MonoBehaviour
 				colorClassifier.SortColors (allColors, _colorSpaceParent);
 			colorClassifier.Create3DColorPlot (allColors, _colorSpaceParent);
 		}
+		if (_isCalibrating) {
+			colorClassifier.Update3DColorPlot (allColors, _colorSpaceParent);
+		}
 	}
 
 
@@ -356,7 +359,7 @@ public class Scanners : MonoBehaviour
 						currID = GetIdAverage (i, j, currID);
 
 					// Save colors for 3D visualization
-					if (setup)
+					if (setup || _isCalibrating)
 						allColors [i + numOfScannersX * j] = pixel;
 				}
 

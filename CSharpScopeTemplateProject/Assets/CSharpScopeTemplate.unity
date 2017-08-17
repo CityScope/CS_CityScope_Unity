@@ -1406,7 +1406,7 @@ MonoBehaviour:
   _sliderRange: 30
   _refreshRate: 1
   _scannerScale: 0.012
-  _useWebcam: 1
+  _useWebcam: 0
   _showRays: 0
   _debug: 0
   _isCalibrating: 0

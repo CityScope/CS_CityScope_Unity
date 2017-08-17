@@ -22,6 +22,10 @@ public class ColorClassifier {
 	private Dictionary<SampleColor, List<Vector3>> sampleColors;
 	private GameObject[] colorSpheres;
 
+	float r;
+	float multiplier;
+	float opacity;
+
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ColorClassifier"/> class.
 	/// </summary>
@@ -32,6 +36,10 @@ public class ColorClassifier {
 			new Color (0f, 0f, 0f),
 			new Color (1f, 0f, 0f)
 		};
+
+		r = 0.01f;
+		multiplier = 1f;
+		opacity = 0.6f;
 	}
 
 	/// <summary>
@@ -84,10 +92,6 @@ public class ColorClassifier {
 	/// </summary>
 	/// <param name="colors">Colors.</param>
 	public void Create3DColorPlot(Color[] colors, GameObject colorSpaceParent) {
-		float r = 0.01f;
-		float multiplier = 1f;
-		float opacity = 0.6f;
-
 		colorSpheres = new GameObject[colors.Length];
 
 		Color currColor;
@@ -112,6 +116,25 @@ public class ColorClassifier {
 			colorSpheres [i].GetComponent<Renderer> ().material.color = currColor;
 			colorSpheres [i].transform.name = "Color sample + " + currColor;
 		}
+	}
+
+	public void Update3DColorPlot(Color[] colors, GameObject colorSpaceParent) {
+		if (colorSpheres == null)
+			return;
+		
+		Color currColor;
+		for (int i = 0; i < colors.Length; i++) {
+//			if (colorSpheres [i].GetComponent<Renderer> ().material.color == colors [i])
+//				continue;
+			
+			colorSpheres [i].transform.localPosition = new Vector3 (colors[i].r * multiplier, colors[i].g * multiplier, colors[i].b * multiplier);
+			currColor = colors [i];
+			currColor.a = opacity;
+			colorSpheres [i].GetComponent<Renderer> ().material.color = currColor;
+			colorSpheres [i].transform.name = "Color sample + " + currColor;
+		}
+
+		Debug.Log ("Updated color plot.");
 	}
 
 	///////////////////////////////////////////////////////
