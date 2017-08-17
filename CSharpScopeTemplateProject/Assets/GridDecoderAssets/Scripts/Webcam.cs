@@ -5,20 +5,36 @@ using UnityEngine;
 public class Webcam : MonoBehaviour
 {
   	public static WebCamTexture webcamera;
+	private Texture originalTexture;
+	public GameObject webcamQuad;
 
     void OnEnable()
     {
-		string webcamName = WebCamTexture.devices [0].name;
-		webcamera = new WebCamTexture (webcamName); //SET up the cam
-		Debug.Log("Webcam texture set from " + webcamName);
+		if (webcamera == null) {
+			string webcamName = WebCamTexture.devices [0].name;
+			webcamera = new WebCamTexture (webcamName); //SET up the cam
+			Debug.Log("Webcam texture set from " + webcamName);
 
-        Setup();
+			Setup();
+		}
+		else {
+			Play ();
+			Debug.Log("Webcam restarted.");
+		}
+
     }
+
+	void OnDisable() {
+		Stop ();
+		Renderer renderer = webcamQuad.GetComponent<Renderer> ();
+		renderer.material.mainTexture = originalTexture; //put cam tex onto quad
+	}
     
     void Setup()
     {
         Play(); // play camera
-		Renderer renderer = GameObject.Find("CameraKeystoneQuad").GetComponent<Renderer> ();
+		Renderer renderer = webcamQuad.GetComponent<Renderer> ();
+		originalTexture = renderer.material.mainTexture; // save current material
         renderer.material.mainTexture = webcamera; //put cam tex onto quad
         Debug.Log("Webcam assigned and playing: " + webcamera.isPlaying);
     }

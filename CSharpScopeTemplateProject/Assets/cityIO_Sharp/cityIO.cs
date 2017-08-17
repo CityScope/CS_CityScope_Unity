@@ -21,26 +21,31 @@ public class cityIO : MonoBehaviour
     private string _urlStart = "https://cityio.media.mit.edu/api/table/citymatrix";
     private string _urlLocalHost = "http://localhost:8080//table/citymatrix";
 
-    public enum DataSource { LOCAL = 0, REMOTE = 1, INTERNAL = 2 }; // select data stream source in editor
+    public enum DataSource { LOCALHOST = 0, REMOTE = 1, INTERNAL = 2 }; // select data stream source in editor
+	[Header("Source of grid data")]
     public DataSource _dataSource = DataSource.INTERNAL;
+	///<summary>
+	/// data refresh rate in seconds 
+	/// </summary>
+	public float _delay;
+	public bool _sendData;
     ///<summary>
     /// table name list
     /// </summary>
     public enum TableName { _andorra = 0, _volpe = 1, _test = 2 }; // select data stream source in editor
+
+	[Header("If data source is remote or localhost:")]
     public TableName _tableName = TableName._volpe;
     private string _url;
-    ///<summary>
-    /// data refresh rate in seconds 
-    /// </summary>
-    public float _delayWWW;
+    
     private WWW _www;
     private string _oldData;
     ///<summary>
     /// flag to rise when new data arrives 
     /// </summary>
     public bool _newCityioDataFlag = false;
-    public int _tableX;
-    public int _tableY;
+
+	[Header("CityIO settings")]
     ///<summary>
     /// real world size of cells in Meters 
     /// </summary>
@@ -62,7 +67,6 @@ public class cityIO : MonoBehaviour
     /// </summary>
     public Material _material;
     public Table _table;
-	public bool _sendData;
 
 	private bool uiChanged = false;
     /// <summary> 
@@ -110,10 +114,10 @@ public class cityIO : MonoBehaviour
         {
             if (_dataSource == DataSource.REMOTE)
                 _url = _urlStart + _tableName.ToString();
-            else if (_dataSource == DataSource.LOCAL)
+            else if (_dataSource == DataSource.LOCALHOST)
                 _url = _urlLocalHost;
 			
-            yield return new WaitForSeconds(_delayWWW);
+            yield return new WaitForSeconds(_delay);
 
             // For JSON parsing
             if (_dataSource != DataSource.INTERNAL) // if table data is online 

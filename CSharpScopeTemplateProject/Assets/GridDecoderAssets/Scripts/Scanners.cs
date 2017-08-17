@@ -57,12 +57,12 @@ public class Scanners : MonoBehaviour
 
 	RaycastHit hit;
 	RenderTexture rTex;
-	Texture2D _texture;
 	GameObject keystonedQuad;
 	GameObject cameraKeystonedQuad;
 
 	public float _refreshRate = 1;
 	public float _scannerScale = 0.5f;
+	private bool updateScannerObjects = true;
 	public bool _useWebcam;
 	public bool _showRays = false;
 	public bool _debug = true;
@@ -83,6 +83,7 @@ public class Scanners : MonoBehaviour
 
 	private string colorTexturedQuadName = "KeystonedTextureQuad";
 	public string _colorSettingsFileName = "_sampleColorSettings.json";
+	private bool shouldReassignTexture;
 
 	private Texture2D hitTex;
 
@@ -105,6 +106,8 @@ public class Scanners : MonoBehaviour
 				GetComponent<Webcam> ().enabled = true;
 		}
 
+		shouldReassignTexture = true;
+
 		scannerThread = new Thread(UpdateScanners);
 		scannerThread.Start ();
 
@@ -123,7 +126,8 @@ public class Scanners : MonoBehaviour
 			////
 			yield return new WaitForSeconds (_refreshRate);
 			// Assign render texture from keystoned quad texture copy & copy it to a Texture2D
-			AssignRenderTexture();
+			if (_useWebcam || shouldReassignTexture)
+				AssignRenderTexture ();
 			yield return new WaitForEndOfFrame ();
 			UpdateScanners ();
 		}
@@ -142,7 +146,33 @@ public class Scanners : MonoBehaviour
 		Debug.Log ("Refresh rate changed to " + _refreshRate);
 	}
 
+	public void SetScannerScale(float scannerScale) {
+		this._scannerScale = scannerScale;
+		updateScannerObjects = true;
+		Debug.Log ("Scanner scale changed to " + _scannerScale);
+	}
+
+	public void ToggleWebcam() {
+		this._useWebcam = !this._useWebcam;
+		shouldReassignTexture = true;
+	}
+
+	public void PauseWebcam() {
+		if (_useWebcam) {
+			if (GetComponent<Webcam> ().enabled) {
+				if (Webcam.isPlaying ())
+					Webcam.Pause ();
+				else
+					Webcam.Play ();
+			}
+		}
+	}
+
 	private void UpdateScanners() {
+		if (updateScannerObjects) {
+			UpdateScannerObjects ();
+			updateScannerObjects = false;
+		}
 
 		if (_isCalibrating || setup)
 			CalibrateColors ();
@@ -197,9 +227,6 @@ public class Scanners : MonoBehaviour
 
 		// Copy mesh with RenderTexture
 		keystonedQuad = GameObject.Find (colorTexturedQuadName);
-
-		_texture = new Texture2D (cameraKeystonedQuad.GetComponent<Renderer> ().material.mainTexture.width, 
-			cameraKeystonedQuad.GetComponent<Renderer> ().material.mainTexture.height);
 
 		LoadScannerSettings ();
 
@@ -418,23 +445,9 @@ public class Scanners : MonoBehaviour
 		if (!hitTex)
 			hitTex = new Texture2D (rt.width, rt.height, TextureFormat.RGB24, false);
 		hitTex.ReadPixels (new Rect (0, 0, rt.width, rt.height), 0, 0);
-	}
 
-	/// <summary>
-	/// Sets the texture from a static image or from the webcam.
-	/// </summary>
-	private void SetTexture() {
-		if (_useWebcam) {
-			if (Webcam.isPlaying())
-	          {
-				_texture.SetPixels((cameraKeystonedQuad.GetComponent<Renderer>().material.mainTexture as WebCamTexture).GetPixels()); //for webcam 
-	          }
-          	else return;
-		}
-		else {
-			_texture.SetPixels ((cameraKeystonedQuad.GetComponent<Renderer> ().material.mainTexture as Texture2D).GetPixels ()); // for texture map 
-		};
-		_texture.Apply ();
+		if (shouldReassignTexture)
+			shouldReassignTexture = false;
 	}
 
 	/// <summary>
@@ -452,6 +465,16 @@ public class Scanners : MonoBehaviour
 				_scanner.transform.localPosition = new Vector3 (x * _scannerScale * 2 - offset, 0.2f, y * _scannerScale * 2 - offset);
 				_scanner.transform.Rotate (90, 0, 0); 
 				scannersList[x, y] = this._scanner;
+			}
+		}
+	}
+
+	private void UpdateScannerObjects() {
+		for (int x = 0; x < numOfScannersX; x++) {
+			for (int y = 0; y < numOfScannersY; y++) {
+				scannersList[x, y].transform.localScale = new Vector3 (_scannerScale, _scannerScale, _scannerScale);  
+				float offset = GameObject.Find (colorTexturedQuadName).GetComponent<Renderer> ().bounds.size.x * 0.5f;
+				scannersList[x, y].transform.localPosition = new Vector3 (x * _scannerScale * 2 - offset, 0.2f, y * _scannerScale * 2 - offset);
 			}
 		}
 	}
