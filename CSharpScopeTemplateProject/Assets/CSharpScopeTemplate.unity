@@ -3651,6 +3651,7 @@ GameObject:
   - component: {fileID: 1030926454}
   - component: {fileID: 1030926453}
   - component: {fileID: 1030926452}
+  - component: {fileID: 1030926457}
   m_Layer: 0
   m_Name: Color_3D_Camera
   m_TagString: Untagged
@@ -3728,6 +3729,20 @@ Transform:
   m_Father: {fileID: 828391467}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &1030926457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1030926451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0007e468cd6634d9bb68caf6ea01a0e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _thisCamTarget: {fileID: 136326349}
+  _rotSpeed: 0.05
+  _thisCam: {fileID: 1030926455}
 --- !u!1 &1062664868
 GameObject:
   m_ObjectHideFlags: 0
@@ -6989,12 +7004,12 @@ MonoBehaviour:
     type: 2}
   _textMeshParent: {fileID: 1481742318}
   colors:
-  - {r: 1, g: 1, b: 1, a: 0}
-  - {r: 1, g: 1, b: 1, a: 0}
-  - {r: 1, g: 1, b: 1, a: 0}
-  - {r: 1, g: 1, b: 1, a: 0}
-  - {r: 1, g: 1, b: 1, a: 0}
-  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 0.9852941, g: 0.9402885, b: 0.6882569, a: 0}
+  - {r: 0.9264706, g: 0.8480261, b: 0.40873703, a: 0}
+  - {r: 0.9485294, g: 0.81096387, b: 0.04184687, a: 0}
+  - {r: 0.8014706, g: 0.8069473, b: 1, a: 0}
+  - {r: 0.38538063, g: 0.4011971, b: 0.9705882, a: 0}
+  - {r: 0.15084343, g: 0.16465215, b: 0.66176474, a: 0}
 --- !u!4 &1877268380
 Transform:
   m_ObjectHideFlags: 0
