@@ -68,6 +68,7 @@ public class Scanners : MonoBehaviour
 	public bool _debug = true;
 	public bool _isCalibrating;
 	public bool _showDebugColors = false;
+	public bool _showDebugLines = false;
 	int _gridSize = 2; // i.e. 2x2 reading for one cell
 
 	private bool setup = true;
@@ -98,13 +99,12 @@ public class Scanners : MonoBehaviour
 		{ "2101", Brick.ROAD }
 	};
 
-	IEnumerator Start ()
-	{
+	void Awake() {
 		if (_useWebcam) {
 			if (!GetComponent<Webcam> ().enabled)
 				GetComponent<Webcam> ().enabled = true;
 		}
-		 
+
 		scannerThread = new Thread(UpdateScanners);
 		scannerThread.Start ();
 
@@ -112,7 +112,10 @@ public class Scanners : MonoBehaviour
 
 		EventManager.StartListening ("reload", OnReload);
 		EventManager.StartListening ("save", OnSave);
-			
+	}
+
+	IEnumerator Start ()
+	{
 		while (true) {
 			////
 			//// Wait one frame for GPU
@@ -128,6 +131,15 @@ public class Scanners : MonoBehaviour
 
 	public void ToggleCalibration() {
 		this._isCalibrating = !this._isCalibrating;
+	}
+
+	public void ToggleDebug() {
+		this._showDebugLines = !this._showDebugLines;
+	}
+
+	public void SetRefreshRate(float refreshRate) {
+		this._refreshRate = refreshRate;
+		Debug.Log ("Refresh rate changed to " + _refreshRate);
 	}
 
 	private void UpdateScanners() {
@@ -255,11 +267,11 @@ public class Scanners : MonoBehaviour
 			}
 		}
 
-		if (_showDebugColors && setup)
-			colorClassifier.SortColors (allColors, _colorSpaceParent);
-
-		if (setup)
+		if (setup) {
+			if (_showDebugColors)
+				colorClassifier.SortColors (allColors, _colorSpaceParent);
 			colorClassifier.Create3DColorPlot (allColors, _colorSpaceParent);
+		}
 	}
 
 
@@ -326,13 +338,14 @@ public class Scanners : MonoBehaviour
 				// Display 3D colors & use scanned colors for scanner color
 				if (_isCalibrating && isGrid) {
 					minColor = pixel;
-					if (_showDebugColors) {
-						// Could improve by drawing only if sphere locations change
-						Vector3 origin = _colorSpaceParent.transform.position;
-						Debug.DrawLine (origin + new Vector3 (pixel.r, pixel.g, pixel.b), origin + new Vector3 (sampleColors [currID].r, sampleColors [currID].g, sampleColors [currID].b), pixel, 1, false);
-					}
 				} else 
 					minColor = colorClassifier.GetColor (currID);
+
+				if (_showDebugLines) {
+					// Could improve by drawing only if sphere locations change
+					Vector3 origin = _colorSpaceParent.transform.position;
+					Debug.DrawLine (origin + new Vector3 (pixel.r, pixel.g, pixel.b), origin + new Vector3 (sampleColors [currID].r, sampleColors [currID].g, sampleColors [currID].b), pixel, 1, false);
+				}
 
 				// Display rays cast at the keystoned quad
 				if (_showRays) {
