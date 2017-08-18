@@ -64,8 +64,8 @@
      <Compile Include="Assets\GridDecoderAssets\Scripts\Scanners.cs" />
      <Compile Include="Assets\GridDecoderAssets\Scripts\Slider.cs" />
      <Compile Include="Assets\GridDecoderAssets\Scripts\Webcam.cs" />
-     <Compile Include="Assets\Resources\CameraControl.cs" />
-     <Compile Include="Assets\ViewManager.cs" />
+     <Compile Include="Assets\Resources\Helper scripts\CameraControl.cs" />
+     <Compile Include="Assets\Resources\Helper scripts\ViewManager.cs" />
      <None Include="Assets\GridDecoderAssets\Shaders\Affine UV fix.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
