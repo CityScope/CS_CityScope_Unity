@@ -12,6 +12,20 @@ using UnityEngine.AI;
 using System.Linq;
 using System;
 
+
+// Class for posting JSON data
+public class TableDataPost {
+	public System.Text.UTF8Encoding encoding;
+	public Dictionary<string,string> header;
+	public string jsonString;
+
+	public TableDataPost() {
+		encoding = new System.Text.UTF8Encoding();
+		header = new Dictionary<string, string>();
+		header.Add("Content-Type", "text/plain");
+		jsonString = "";
+	}
+}
 public class cityIO : MonoBehaviour
 {
     ///<summary>
@@ -28,7 +42,11 @@ public class cityIO : MonoBehaviour
 	/// data refresh rate in seconds 
 	/// </summary>
 	public float _delay;
+
+	[Header("If sending scanned data to server")]
 	public bool _sendData;
+	public string postTableURL = "https://cityio.media.mit.edu/api/table/update/citymatrix";
+	private TableDataPost tableDataPost;
     ///<summary>
     /// table name list
     /// </summary>
@@ -96,12 +114,14 @@ public class cityIO : MonoBehaviour
     private int[] notBuildingTypes = new int[] { (int)Brick.INVALID, (int)Brick.MASK, (int)Brick.ROAD, (int)Brick.PARK, (int)Brick.AMENITIES, (int)Brick.STREET };
     private int[] buildingTypes = new int[] { (int)Brick.RL, (int)Brick.RM, (int)Brick.RS, (int)Brick.RL, (int)Brick.OL, (int)Brick.OM, (int)Brick.OS };
 
+	public bool debug = false;
 
 	void Awake() {
 		_tmpColor = Color.black;
 		height = 0f;
 		yPos = 0f;
 		_table = new Table();
+		tableDataPost = new TableDataPost ();
 
 		// Listeners to update slider & dock values
 		EventManager.StartListening ("sliderChange", OnSliderChanged);
@@ -128,8 +148,6 @@ public class cityIO : MonoBehaviour
             }
             else
 			{ // for app data 
-				if (_sendData)
-					SendData ();
 				UpdateTableInternal();
             }
         }
@@ -182,34 +200,42 @@ public class cityIO : MonoBehaviour
 			uiChanged = false;
 	}
 
+	/// <summary>
+	/// Sending Table data to server
+	/// </summary>
 	private void SendData() {
-		string newData = _table.WriteToJSON ();
+		tableDataPost.jsonString = _table.WriteToJSON ();
+		if (debug)
+			Debug.Log("tableDataPost.jsonString: " + tableDataPost.jsonString);
 
-		string postScoreURL = "https://cityio.media.mit.edu/api/update/testtable";
+		WWW post = new WWW(postTableURL, tableDataPost.encoding.GetBytes(tableDataPost.jsonString), tableDataPost.header);
 
-		System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
-		Hashtable postHeader = new Hashtable();
-
-		postHeader.Add("Content-Type", "text/plain");
-
-		//Debug.Log("jsonString: " + newData);
-
-		WWW request = new WWW(postScoreURL, encoding.GetBytes(newData), postHeader);
-
-		StartCoroutine(WaitForWWW(request));
+		StartCoroutine(WaitForWWW(post));
 	}
 
+	/// <summary>
+	/// Coroutine for data posting to server
+	/// </summary>
+	/// <returns>The for WW.</returns>
+	/// <param name="www">Www.</param>
 	IEnumerator WaitForWWW(WWW www)
 	{
 		yield return www;
 
 		string txt = "";
-		if (string.IsNullOrEmpty(www.error))
+		if (string.IsNullOrEmpty(www.error)) {
 			txt = www.text;  //text of success
-		else
+			if (debug)
+				Debug.Log ("jsonString: " + txt);
+			else
+				Debug.Log ("JSON posted.");
+		}
+		else {
 			txt = www.error;  //error
+			Debug.Log ("JSON post failed: " + txt);
+		}
 
-		Debug.Log ("jsonString: " + txt);
+
 	}
 
 

@@ -5316,8 +5316,6 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: SCANNERS VIEW
       m_Image: {fileID: 0}
-    - m_Text: 3D CITYIO VIEW
-      m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -6978,6 +6976,7 @@ MonoBehaviour:
   _dataSource: 2
   _delay: 0
   _sendData: 0
+  postTableURL: https://cityio.media.mit.edu/api/table/update/citymatrix
   _tableName: 1
   _newCityioDataFlag: 0
   _cellSizeInMeters: 1
@@ -7013,6 +7012,7 @@ MonoBehaviour:
   - {r: 0.8014706, g: 0.8069473, b: 1, a: 0}
   - {r: 0.38538063, g: 0.4011971, b: 0.9705882, a: 0}
   - {r: 0.15084343, g: 0.16465215, b: 0.66176474, a: 0}
+  debug: 0
 --- !u!4 &1877268380
 Transform:
   m_ObjectHideFlags: 0
