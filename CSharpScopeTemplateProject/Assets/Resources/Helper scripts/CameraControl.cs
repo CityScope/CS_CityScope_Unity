@@ -30,22 +30,22 @@ public class CameraControl : MonoBehaviour
 		transform.RotateAround(_thisCamTarget.position, Vector3.up, (_rotSpeed * _thisCam.orthographicSize) * Time.deltaTime);
 
 		// key controls for camera 
-		if (Input.GetKey("up"))
-		{
-			CameraLocation(1, 0);
-		}
-		else if (Input.GetKey("down"))
-		{
-			CameraLocation(-1, 0);
-		}
-		else if (Input.GetKey("left"))
-		{
-			CameraLocation(0, 1);
-		}
-		else if (Input.GetKey("right"))
-		{
-			CameraLocation(0, -1);
-		}
+//		if (Input.GetKey("up"))
+//		{
+//			CameraLocation(1, 0);
+//		}
+//		else if (Input.GetKey("down"))
+//		{
+//			CameraLocation(-1, 0);
+//		}
+//		else if (Input.GetKey("left"))
+//		{
+//			CameraLocation(0, 1);
+//		}
+//		else if (Input.GetKey("right"))
+//		{
+//			CameraLocation(0, -1);
+//		}
 	}
 	void CameraLocation(int _keyVer, int _keyHor)
 	{
