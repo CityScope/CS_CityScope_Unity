@@ -8,7 +8,8 @@ public class ViewManager : MonoBehaviour {
 		GRID_UI = 0,
 		COLOR_3D = 1,
 		PROJECTION = 2,
-		CITYIO = 3,
+		GRID_SCAN = 3,
+		CITYIO = 4,
 	};
 
 	public GameObject[] cameras;

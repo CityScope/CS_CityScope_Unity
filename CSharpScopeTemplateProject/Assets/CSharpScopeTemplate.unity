@@ -672,7 +672,7 @@ GameObject:
   - component: {fileID: 218026213}
   - component: {fileID: 218026212}
   m_Layer: 0
-  m_Name: Camera
+  m_Name: CityIOCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3051,6 +3051,7 @@ MonoBehaviour:
   - {fileID: 1030926451}
   - {fileID: 1254680388}
   - {fileID: 1385514202}
+  - {fileID: 218026210}
 --- !u!4 &828391467
 Transform:
   m_ObjectHideFlags: 0
@@ -3197,7 +3198,7 @@ GameObject:
   - component: {fileID: 849010565}
   - component: {fileID: 849010564}
   m_Layer: 0
-  m_Name: Camera
+  m_Name: ProjMapOutputCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5314,6 +5315,8 @@ MonoBehaviour:
     - m_Text: PROJECTION VIEW
       m_Image: {fileID: 0}
     - m_Text: SCANNERS VIEW
+      m_Image: {fileID: 0}
+    - m_Text: 3D CITYIO VIEW
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
