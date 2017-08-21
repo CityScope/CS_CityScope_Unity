@@ -435,6 +435,10 @@ public class cityIO : MonoBehaviour
 		return (int) buildingTypes.Length;
 	}
 
+	public void SetDataSending(bool isSending) {
+		this._sendData = isSending;
+	}
+
 	/////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////
 	/// 
