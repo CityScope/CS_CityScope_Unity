@@ -51,9 +51,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\cityIO_Sharp\cityIO.cs" />
-     <Compile Include="Assets\cityIO_Sharp\JSONclass.cs" />
-     <Compile Include="Assets\cityIO_Sharp\Table.cs" />
+     <Compile Include="Assets\cityIO_Sharp\Scripts\cityIO.cs" />
+     <Compile Include="Assets\cityIO_Sharp\Scripts\JSONclass.cs" />
+     <Compile Include="Assets\cityIO_Sharp\Scripts\Table.cs" />
      <Compile Include="Assets\GridDecoderAssets\Scripts\ColorClassifier.cs" />
      <Compile Include="Assets\GridDecoderAssets\Scripts\Dock.cs" />
      <Compile Include="Assets\GridDecoderAssets\Scripts\EventManager.cs" />
