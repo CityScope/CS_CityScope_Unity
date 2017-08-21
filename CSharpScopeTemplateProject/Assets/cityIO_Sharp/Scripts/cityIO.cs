@@ -42,6 +42,7 @@ public class cityIO : MonoBehaviour
 	/// data refresh rate in seconds 
 	/// </summary>
 	public float _delay;
+	public float _postDelay;
 
 	[Header("If sending scanned data to server")]
 	public bool _sendData;
@@ -57,6 +58,8 @@ public class cityIO : MonoBehaviour
     private string _url;
     
     private WWW _www;
+	private WWW post;
+
     private string _oldData;
     ///<summary>
     /// flag to rise when new data arrives 
@@ -205,10 +208,10 @@ public class cityIO : MonoBehaviour
 	/// </summary>
 	private void SendData() {
 		tableDataPost.jsonString = _table.WriteToJSON ();
-		if (debug)
-			Debug.Log("tableDataPost.jsonString: " + tableDataPost.jsonString);
+		//if (debug)
+		//	Debug.Log("tableDataPost.jsonString: " + tableDataPost.jsonString);
 
-		WWW post = new WWW(postTableURL, tableDataPost.encoding.GetBytes(tableDataPost.jsonString), tableDataPost.header);
+		post = new WWW(postTableURL, tableDataPost.encoding.GetBytes(tableDataPost.jsonString), tableDataPost.header);
 
 		StartCoroutine(WaitForWWW(post));
 	}
@@ -220,6 +223,7 @@ public class cityIO : MonoBehaviour
 	/// <param name="www">Www.</param>
 	IEnumerator WaitForWWW(WWW www)
 	{
+		yield return new WaitForSeconds(_postDelay);
 		yield return www;
 
 		string txt = "";
@@ -234,8 +238,6 @@ public class cityIO : MonoBehaviour
 			txt = www.error;  //error
 			Debug.Log ("JSON post failed: " + txt);
 		}
-
-
 	}
 
 

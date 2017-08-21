@@ -1904,7 +1904,7 @@ MonoBehaviour:
   _gridSizeY: 20
   _enableUI: 0
   _sliderRange: 30
-  _refreshRate: 1
+  _refreshRate: 0.2
   _scannerScale: 0.012
   _useWebcam: 0
   _showRays: 0
@@ -9526,7 +9526,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dataSource: 2
-  _delay: 0
+  _delay: 0.1
+  _postDelay: 3
   _sendData: 0
   postTableURL: https://cityio.media.mit.edu/api/table/update/cityscope_andorra_unity
   _tableName: 0
@@ -9564,7 +9565,7 @@ MonoBehaviour:
   - {r: 0.8014706, g: 0.8069473, b: 1, a: 0}
   - {r: 0.38538063, g: 0.4011971, b: 0.9705882, a: 0}
   - {r: 0.15084343, g: 0.16465215, b: 0.66176474, a: 0}
-  debug: 0
+  debug: 1
 --- !u!4 &1877268380
 Transform:
   m_ObjectHideFlags: 0
