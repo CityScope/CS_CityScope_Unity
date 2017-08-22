@@ -444,7 +444,11 @@ MonoBehaviour:
 
     Press ''S'' to save
 
-    Press ''L'' to load
+    Press ''L'' to load''
+
+    Press ''Control'' move vertices faster
+
+    Press ''Alt'' to move vertices slower
 
 '
 --- !u!222 &26275886
