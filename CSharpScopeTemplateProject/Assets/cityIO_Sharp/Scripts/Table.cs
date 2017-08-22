@@ -57,10 +57,10 @@ public class Table
 					if (currType != currIds [i, j]) {
 						this.grid [i * currIds.GetLength (1) + j].type = currIds [i, j];
 						needsUpdate = true;
-						this.grid [i * currIds.GetLength (1) + j].update = true;
+						this.grid [i * currIds.GetLength (1) + j].SetUpdate(true);
 					}
 					else
-						this.grid [i * currIds.GetLength (1) + j].update = false;
+						this.grid [i * currIds.GetLength (1) + j].SetUpdate(false);
 				}
 			}
 		}
@@ -77,7 +77,7 @@ public class Table
 					currGrid.x = i;
 					currGrid.y = j;
 					currGrid.rot = 180;
-					currGrid.update = true;
+					currGrid.SetUpdate(true);
 					this.grid.Add (currGrid);
 					currGrid = null;
 				}

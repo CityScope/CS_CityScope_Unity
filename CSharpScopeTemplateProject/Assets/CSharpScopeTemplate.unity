@@ -1900,8 +1900,8 @@ MonoBehaviour:
   _useBuffer: 0
   _gridParent: {fileID: 1163447381}
   _colorSpaceParent: {fileID: 136326348}
-  _gridSizeX: 20
-  _gridSizeY: 20
+  _gridSizeX: 30
+  _gridSizeY: 30
   _enableUI: 0
   _sliderRange: 30
   _refreshRate: 0.2
@@ -9525,13 +9525,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4b2bd5685f9b49f4a7481b30fb93b1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dataSource: 2
+  _dataSource: 1
   _delay: 0.1
   _postDelay: 3
   _sendData: 0
   postTableURL: https://cityio.media.mit.edu/api/table/update/cityscope_andorra_unity
-  _tableName: 0
-  _newCityioDataFlag: 0
+  _tableName: 2
+  _newCityioDataFlag: 1
   _cellSizeInMeters: 1
   cellShrink: 0.95
   _floorHeight: 0.25
