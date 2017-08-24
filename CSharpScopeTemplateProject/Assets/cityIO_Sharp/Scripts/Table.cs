@@ -74,8 +74,8 @@ public class Table
 				for (int j = 0; j < currIds.GetLength (1); j++) {
 					Grid currGrid = new Grid ();
 					currGrid.type = currIds [i, j];
-					currGrid.x = i;
-					currGrid.y = j;
+					currGrid.x = j;
+					currGrid.y = i;
 					currGrid.rot = 180;
 					currGrid.SetUpdate(true);
 					this.grid.Add (currGrid);
