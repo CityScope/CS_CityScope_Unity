@@ -51,7 +51,7 @@ public class cityIO : MonoBehaviour
     ///<summary>
     /// table name list
     /// </summary>
-    public enum TableName { _andorra = 0, _volpe = 1, _test = 2 }; // select data stream source in editor
+    public enum TableName { _andorra = 0, _volpe = 1}; // select data stream source in editor
 
 	[Header("If data source is remote or localhost:")]
     public TableName _tableName = TableName._volpe;
@@ -108,8 +108,8 @@ public class cityIO : MonoBehaviour
     public Color[] colors;
 
 	private Color _tmpColor;
-	private float height;
-	private float yPos;
+	private float _gridCellYHeight;
+	private float _gridCellYPos;
 	private Vector3 gridObjectPosition;
 	private Vector3 gridObjectScale;
 
@@ -121,8 +121,8 @@ public class cityIO : MonoBehaviour
 
 	void Awake() {
 		_tmpColor = Color.black;
-		height = 0f;
-		yPos = 0f;
+		_gridCellYHeight = 0f;
+		_gridCellYPos = 0f;
 		_table = new Table();
 		tableDataPost = new TableDataPost ();
 
@@ -268,8 +268,8 @@ public class cityIO : MonoBehaviour
 
 	private void SetGridObject(int i) {
 		// compensate for scale shift and x,y array
-		gridObjectPosition = new Vector3((_table.grid[i].x * _cellSizeInMeters), yPos, (_table.grid[i].y * _cellSizeInMeters));
-		gridObjectScale = new Vector3(cellShrink * _cellSizeInMeters, height, cellShrink * _cellSizeInMeters);
+		gridObjectPosition = new Vector3((_table.grid[i].x * _cellSizeInMeters), _gridCellYPos, (_table.grid[i].y * _cellSizeInMeters));
+		gridObjectScale = new Vector3(cellShrink * _cellSizeInMeters, _gridCellYHeight, cellShrink * _cellSizeInMeters);
 
 		_gridObjects[i].transform.localPosition = gridObjectPosition;
 		_gridObjects[i].transform.localScale = gridObjectScale; // go through all 'densities' to match Type to Height
@@ -280,52 +280,54 @@ public class cityIO : MonoBehaviour
 	/// Updates the grid object's height and scale given the current type.
 	/// </summary>
 	/// <param name="i">The index.</param>
-	private void UpdateGridObject(int i) {
-		if (buildingTypes.Contains(_table.grid[i].type)) //if this cell is one of the buildings types
-		{
-			height = _gridObjects[i].transform.position.y + (_table.objects.density[_table.grid[i].type] * _floorHeight); 
-			yPos = _table.objects.density[_table.grid[i].type] * _floorHeight * 0.5f;
-			_tmpColor = colors[_table.grid[i].type];
-			_tmpColor.a = 0.8f;
+	    private void UpdateGridObject(int i)
+    {
+        if (buildingTypes.Contains(_table.grid[i].type)) //if this cell is one of the buildings types
+        {
+            _gridCellYHeight = _table.objects.density[_table.grid[i].type] * _floorHeight;
+            _gridCellYPos = (_gridCellYHeight * 0.5f);
 
-			SetGridObject (i);
-		}
-		else if (notBuildingTypes.Contains(_table.grid[i].type))
-		{
-			_tmpColor = Color.white;
-			_tmpColor.a = 1f;
+            _tmpColor = colors[_table.grid[i].type];
+            _tmpColor.a = 0.85f;
 
-			if (_table.grid[i].type == (int)Brick.ROAD)
-			{
-				yPos = 0;
-				height = 0.25f;
-			}
-			else if (_table.grid[i].type == (int)Brick.AMENITIES) 
-			{
-				yPos = 0f;
-				height = 0.25f;
-			}
-			else if (_table.grid[i].type == (int)Brick.STREET)
-			{
-				yPos = 0f;
-				height = 1f;
-			}
-			else //if other non building type
-			{
-				yPos = 0f;
-				height = 0.85f;
+            SetGridObject(i);
+        }
+        else if (notBuildingTypes.Contains(_table.grid[i].type))
+        {
+            _tmpColor = Color.white;
+            _tmpColor.a = 0.1f;
 
-				_gridObjects[i].transform.localScale = new Vector3
-					(cellShrink * _cellSizeInMeters * 0.85f, 0.85f, cellShrink * _cellSizeInMeters * 0.85f);
-			}
-			SetGridObject (i);
-		}
-		NameGridObject (i);
-		UpdateBuildingTypeText (i, true);
+            if (_table.grid[i].type == (int)Brick.ROAD)
+            {
+                _gridCellYHeight = 1;
+                _gridCellYPos = 0f;
+            }
+            else if (_table.grid[i].type == (int)Brick.AMENITIES)
+            {
+                _gridCellYHeight = 1f;
+                _gridCellYPos = 0f;
+            }
+            else if (_table.grid[i].type == (int)Brick.STREET)
+            {
+                _gridCellYHeight = 1f;
+                _gridCellYPos = 0f;
+            }
+            else //if other non building type
+            {
+                _gridCellYHeight = 1f;
+                _gridCellYPos = 0f;
 
-		if (!_gridObjects[i].activeSelf)
-			_gridObjects [i].SetActive (true);
-	}
+                _gridObjects[i].transform.localScale = new Vector3
+                    (cellShrink * _cellSizeInMeters * 0.85f, 0.85f, cellShrink * _cellSizeInMeters * 0.85f);
+            }
+            SetGridObject(i);
+        }
+        NameGridObject(i);
+        UpdateBuildingTypeText(i, true);
+
+        if (!_gridObjects[i].activeSelf)
+            _gridObjects[i].SetActive(true);
+    }
 
 	private void NameGridObject(int i) {
 		if (_table.grid[i].type > (int)Brick.INVALID && _table.grid[i].type < (int)Brick.ROAD) //if object has is building with Z height
@@ -365,7 +367,6 @@ public class cityIO : MonoBehaviour
 		}
 	}
 		
-
     private void DrawTable()
     {
 		if (_gridObjects == null)
@@ -456,5 +457,6 @@ public class cityIO : MonoBehaviour
 	public void OnDockChanged() {
 		uiChanged = true;
 	}
-
 }
+
+
