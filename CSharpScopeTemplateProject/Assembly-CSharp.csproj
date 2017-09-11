@@ -51,7 +51,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\cityIO_Sharp\Scripts\cityIO.cs" />
+     <Compile Include="Assets\cityIO_Sharp\Scripts\CityScopeData.cs" />
+     <Compile Include="Assets\cityIO_Sharp\Scripts\CityScopeVis.cs" />
      <Compile Include="Assets\cityIO_Sharp\Scripts\JSONclass.cs" />
      <Compile Include="Assets\cityIO_Sharp\Scripts\Table.cs" />
      <Compile Include="Assets\GridDecoderAssets\Scripts\ColorClassifier.cs" />

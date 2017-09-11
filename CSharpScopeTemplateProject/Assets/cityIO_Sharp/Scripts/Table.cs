@@ -5,13 +5,28 @@ using UnityEngine;
 [System.Serializable]// have to have this in every JSON class!
 public class Table
 {
+	private static Table _instance;
+
 	public List<Grid> grid;
 	public Objects objects;
 	public string id;
 	public long timestamp;
 
-	public Table() {
-		this.objects = new Objects ();
+	public static Table Instance {
+		get {
+			if (applicationIsQuitting) {
+				Debug.LogWarning("[Singleton] Instance '"+ typeof(Table) +
+					"' already destroyed on application quit." +
+					" Won't create again - returning null.");
+				return null;
+			}
+
+			if (_instance == null) {
+				_instance = new Table ();
+			}
+
+			return _instance;
+		}
 	}
 
 	public static Table CreateFromJSON(string jsonString)
@@ -126,7 +141,7 @@ public class Table
 	private void SetupObjects(ref Scanners scanners) {
 		// Initialize with random densities
 		this.objects.density = new List<int>();
-		int buildingTypesCount = GameObject.Find ("cityIO").GetComponent<cityIO> ().GetBuildingTypeCount ();
+		int buildingTypesCount = GameObject.Find ("CityScope").GetComponent<CityScopeVis> ().GetBuildingTypeCount ();
 
 		for (int i = 0; i < buildingTypesCount; i++)
 			this.objects.density.Add((int)(UnityEngine.Random.Range(0f, 20f)));
@@ -138,5 +153,19 @@ public class Table
 	public string WriteToJSON()
 	{
 		return JsonUtility.ToJson (this);
+	}
+
+	private static bool applicationIsQuitting = false;
+	/// <summary>
+	/// When Unity quits, it destroys objects in a random order.
+	/// In principle, a Singleton is only destroyed when application quits.
+	/// If any script calls Instance after it have been destroyed, 
+	///   it will create a buggy ghost object that will stay on the Editor scene
+	///   even after stopping playing the Application. Really bad!
+	/// So, this was made to be sure we're not creating that buggy ghost object.
+	/// </summary>
+	/// 
+	public void OnDestroy () {
+		applicationIsQuitting = true;
 	}
 }

@@ -21,7 +21,6 @@ public class KeystoneSettings {
 
 public class KeystoneController : MonoBehaviour
 {
-
 	KeystoneSettings settings;
 
 	private float[] d;
