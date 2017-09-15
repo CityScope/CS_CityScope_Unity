@@ -65,6 +65,7 @@ public class CityScopeData : MonoBehaviour
     /// flag to rise when new data arrives 
     /// </summary>
     public bool _newCityioDataFlag = false;
+	CityScopeVis _visualization;
 
 
 	private bool uiChanged = false;
@@ -74,6 +75,7 @@ public class CityScopeData : MonoBehaviour
 
 	void Awake() {
 		tableDataPost = new TableDataPost ();
+		_visualization = this.GetComponent<CityScopeVis> ();
 
 		// Listeners to update slider & dock values
 		EventManager.StartListening ("sliderChange", OnSliderChanged);
@@ -120,7 +122,7 @@ public class CityScopeData : MonoBehaviour
 				_oldData = _www.text; //new data has arrived from server 
 				Table.Instance.CreateFromJSON(_www.text); // get parsed JSON into Cells variable --- MUST BE BEFORE CALLING ANYTHING FROM CELLS!!
 				_newCityioDataFlag = true;
-				DrawTable();
+				_visualization.DrawTable(uiChanged);
 				// prints last update time to console 
 				System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
 				var lastUpdateTime = epochStart.AddSeconds(System.Math.Round(Table.Instance.timestamp / 1000d)).ToLocalTime();
@@ -145,7 +147,7 @@ public class CityScopeData : MonoBehaviour
 			EventManager.TriggerEvent ("updateData");
 			if (_sendData)
 				SendData ();
-			DrawTable();
+			_visualization.DrawTable(uiChanged);
 		}
 
 		if (uiChanged)
@@ -193,28 +195,6 @@ public class CityScopeData : MonoBehaviour
 	public bool ShouldUpdateGrid(int index) {
 		return (Table.Instance.grid [index].ShouldUpdate() || uiChanged);
 	}
-		
-
-	/// <summary>
-	/// Updates the table if the given grid object changed or if the slider/ dock changed
-	/// </summary>
-	private void UpdateTable() {
-		for (int i = 0; i < Table.Instance.grid.Count; i++) { // loop through list of all cells grid objects 
-			if ((Table.Instance.grid[i].ShouldUpdate() || uiChanged))
-				UpdateGridObject(i);
-		}
-	}
-		
-
-    private void DrawTable()
-    {
-		if (_gridObjects == null)
-			SetupTable ();
-		
-		UpdateTable ();
-    }
-
-    
 
 	/////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////

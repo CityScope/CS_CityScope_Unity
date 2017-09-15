@@ -49,9 +49,9 @@ public class CityScopeVis : MonoBehaviour {
 	private float textOffset = 20f;
 
 	/// <summary>
-	/// list of types colors
+	/// list of types gridColors
 	/// </summary>
-	public Color[] colors;
+	public Color[] gridColors = new Color[6];
 
 
 	private int[] notBuildingTypes = new int[] { (int)Brick.INVALID, (int)Brick.MASK, (int)Brick.ROAD, (int)Brick.PARK, (int)Brick.AMENITIES, (int)Brick.STREET };
@@ -61,13 +61,15 @@ public class CityScopeVis : MonoBehaviour {
 		_tmpColor = Color.black;
 		height = 0f;
 		yPos = 0f;
-
 	}
 
 	/// <summary>
 	/// Creates array of gridobjects 
 	/// </summary>
 	private void SetupTable() {
+		if (_gridHolder == null)
+			_gridHolder = new GameObject ();
+		
 		_gridObjects = new GameObject[Table.Instance.grid.Count];
 
 		for (int i = 0; i < Table.Instance.grid.Count; i++) // loop through list of all cells grid objects 
@@ -82,6 +84,7 @@ public class CityScopeVis : MonoBehaviour {
 	private void CreateGridObject(int i) {
 		/* make the grid cells in generic form */
 		_gridObjects[i] = GameObject.CreatePrimitive(PrimitiveType.Cube); //make cell cube 
+		
 		_gridObjects[i].transform.parent = _gridHolder.transform; //put into parent object for later control
 
 		gridObjectPosition = new Vector3((Table.Instance.grid[i].x * _cellSizeInMeters), 0, (Table.Instance.grid[i].y * _cellSizeInMeters));
@@ -93,7 +96,7 @@ public class CityScopeVis : MonoBehaviour {
 		_gridObjects[i].transform.localScale = gridObjectScale;
 		_gridObjects [i].SetActive (false);
 
-		AddBuildingTypeText (i, textOffset);
+		//AddBuildingTypeText (i, textOffset);
 	}
 
 	private void SetGridObject(int i) {
@@ -119,7 +122,9 @@ public class CityScopeVis : MonoBehaviour {
 		{
 			height = _gridObjects[i].transform.position.y + (Table.Instance.objects.density[Table.Instance.grid[i].type] * _floorHeight); 
 			yPos = Table.Instance.objects.density[Table.Instance.grid[i].type] * _floorHeight * 0.5f;
-			_tmpColor = colors[Table.Instance.grid[i].type];
+
+			int type = Table.Instance.GetType (i);
+			_tmpColor = gridColors[type];
 			_tmpColor.a = 0.8f;
 
 			SetGridObject (i);
@@ -159,6 +164,25 @@ public class CityScopeVis : MonoBehaviour {
 
 		if (!_gridObjects[i].activeSelf)
 			_gridObjects [i].SetActive (true);
+	}
+
+	/// <summary>
+	/// Updates the table if the given grid object changed or if the slider/ dock changed
+	/// </summary>
+	private void UpdateTable(bool uiChanged) {
+		for (int i = 0; i < Table.Instance.grid.Count; i++) { // loop through list of all cells grid objects 
+			if ((Table.Instance.grid[i].ShouldUpdate() || uiChanged))
+				UpdateGridObject(i);
+		}
+	}
+
+
+	public void DrawTable(bool uiChanged)
+	{
+		if (_gridObjects == null)
+			SetupTable ();
+
+		UpdateTable (uiChanged);
 	}
 
 	private void NameGridObject(int i) {
@@ -202,6 +226,9 @@ public class CityScopeVis : MonoBehaviour {
 	}
 
 	private void UpdateBuildingTypeText(int i, bool enabled) {
+		if (textMeshes == null)
+			return;
+		
 		if (enabled && Table.Instance.grid [i].type != (int)Brick.INVALID)
 			textMeshes [i].SetActive (true);
 		else
@@ -213,12 +240,15 @@ public class CityScopeVis : MonoBehaviour {
 	}
 
 	public int GetBuildingTypeCount() {
+		if (buildingTypes == null)
+			return -1;
+		
 		return (int) buildingTypes.Length;
 	}
 
 	public Color GetColor(int i) {
-		if (colors.Length > i)
-			return colors [i];
+		if (gridColors.Length > i)
+			return gridColors [i];
 		return Color.black;
 	}
 

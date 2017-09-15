@@ -237,6 +237,9 @@ public class Scanners : MonoBehaviour
 	/// Calibrates the colors based on sample points.
 	/// </summary>
 	private void CalibrateColors() {
+		if (colorRefSpheres == null)
+			return;
+		
 		foreach (var colorSphere in colorRefSpheres) {
 			UpdateSphereColor (colorSphere.Value);
 			sampleColors [(int)colorSphere.Key] = colorSphere.Value.GetComponent<Renderer> ().material.color;
@@ -475,6 +478,8 @@ public class Scanners : MonoBehaviour
 	private void UpdateScannerObjects() {
 		for (int x = 0; x < numOfScannersX; x++) {
 			for (int y = 0; y < numOfScannersY; y++) {
+				if (scannersList [x, y] == null)
+					continue;
 				scannersList[x, y].transform.localScale = new Vector3 (_scannerScale, _scannerScale, _scannerScale);  
 				float offset = GameObject.Find (colorTexturedQuadName).GetComponent<Renderer> ().bounds.size.x * 0.5f;
 				scannersList[x, y].transform.localPosition = new Vector3 (x * _scannerScale * 2 - offset, 0.2f, y * _scannerScale * 2 - offset);

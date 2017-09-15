@@ -12,6 +12,10 @@ public class Table
 	public string id;
 	public long timestamp;
 
+	private Table() {
+		this.objects = new Objects ();
+	}
+
 	public static Table Instance {
 		get {
 			if (applicationIsQuitting) {
@@ -29,7 +33,7 @@ public class Table
 		}
 	}
 
-	public static Table CreateFromJSON(string jsonString)
+	public Table CreateFromJSON(string jsonString)
 	{ // static function that returns Table which holds Class objects 
 		return JsonUtility.FromJson<Table>(jsonString);
 	}
@@ -99,6 +103,20 @@ public class Table
 			}
 		}
 		return needsUpdate;
+	}
+
+	public void PrintGrid() {
+		if (this.grid != null) {
+			string ids = "";
+			for (int i = 0; i < this.grid.Count; i++) {
+				ids += this.grid [i].type;
+			}
+			Debug.Log (ids);
+		}
+	}
+
+	public int GetType(int index) {
+		return this.grid [index].type;
 	}
 
 	/// <summary>
