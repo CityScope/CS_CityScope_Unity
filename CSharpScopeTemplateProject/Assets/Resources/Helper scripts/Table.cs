@@ -13,11 +13,13 @@ public class Table
 	public long timestamp;
 
 	private bool needsUpdate;
+	private bool isInternal;
 
 
 	private Table() {
 		this.objects = new Objects ();
 		this.needsUpdate = true;
+		this.isInternal = false;
 
 		this.SetupObjects ();
 	}
@@ -43,8 +45,13 @@ public class Table
 		return this.needsUpdate;
 	}
 
+	public void SetInternal(bool isInternal) {
+		this.isInternal = isInternal;
+	}
+
 	public void CreateFromJSON(string jsonString)
 	{ // static function that returns Table which holds Class objects 
+		isInternal = false;
 		_instance = JsonUtility.FromJson<Table>(jsonString);
 	}
 
@@ -55,6 +62,8 @@ public class Table
 	/// <param name="table">Table.</param>
 	/// <param name="scannersParentName">Scanners parent name.</param>
 	public void CreateGrid(ref int[,] currIds) {
+		if (isInternal == false)
+			return;
 		if (currIds == null)
 			return;
 

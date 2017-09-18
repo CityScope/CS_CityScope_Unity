@@ -83,7 +83,7 @@ public class CityScopeData : MonoBehaviour
 	}
 
     IEnumerator Start()
-    {
+    {			
         while (true)
         {
             if (_dataSource == DataSource.REMOTE)
@@ -102,6 +102,7 @@ public class CityScopeData : MonoBehaviour
             }
             else
 			{ // for app data 
+				Table.Instance.SetInternal(true);
 				UpdateTableInternal();
             }
         }
