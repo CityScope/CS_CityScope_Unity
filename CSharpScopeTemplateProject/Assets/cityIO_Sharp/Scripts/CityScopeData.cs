@@ -135,12 +135,8 @@ public class CityScopeData : MonoBehaviour
 	/// Updates the table from the grid scanned internally in Unity.
 	/// </summary>
 	private void UpdateTableInternal() {
-		// Update UI values (slider, dock)
- 		if (uiChanged)
-			Table.Instance.UpdateObjectsFromDecoder ("ScannersParent");
-
 		// Update Grid values
-		bool update = Table.Instance.CreateGridFromDecoder("ScannersParent");
+		bool update = Table.Instance.NeedsUpdate();
 
 		_newCityioDataFlag = true;
 		if (Table.Instance.grid != null && (update || uiChanged)) {

@@ -12,8 +12,13 @@ public class Table
 	public string id;
 	public long timestamp;
 
+	private bool needsUpdate;
+
+
 	private Table() {
 		this.objects = new Objects ();
+
+		this.SetupObjects ();
 	}
 
 	public static Table Instance {
@@ -33,28 +38,13 @@ public class Table
 		}
 	}
 
-	public Table CreateFromJSON(string jsonString)
-	{ // static function that returns Table which holds Class objects 
-		return JsonUtility.FromJson<Table>(jsonString);
-	}
-
-	/// <summary>
-	/// Creates Table object from GridDecoder.
-	/// Returns true if there are changes to the grid.
-	/// </summary>
-	/// <param name="table">Table.</param>
-	public bool CreateGridFromDecoder(string scannersParentName)
-	{
-		bool needsUpdate = false;
-		Scanners scanners = GameObject.Find (scannersParentName).GetComponent<Scanners> ();
-		CreateGrid(ref scanners, ref needsUpdate);
+	public bool NeedsUpdate() {
 		return needsUpdate;
 	}
 
-	public void UpdateObjectsFromDecoder(string scannersParentName)
-	{
-		Scanners scanners = GameObject.Find (scannersParentName).GetComponent<Scanners> ();
-		UpdateObjects (ref scanners);
+	public Table CreateFromJSON(string jsonString)
+	{ // static function that returns Table which holds Class objects 
+		return JsonUtility.FromJson<Table>(jsonString);
 	}
 
 	/// <summary>
@@ -63,10 +53,9 @@ public class Table
 	/// <returns><c>true</c>, if grid was created, <c>false</c> otherwise.</returns>
 	/// <param name="table">Table.</param>
 	/// <param name="scannersParentName">Scanners parent name.</param>
-	private bool CreateGrid(ref Scanners scanners, ref bool needsUpdate) {
-		int[,] currIds = scanners.GetCurrentIds();
+	public void CreateGrid(ref int[,] currIds) {
 		if (currIds == null)
-			return false;
+			return;
 
 		if (this.grid != null) {
 			for (int i = 0; i < currIds.GetLength (0); i++) {
@@ -86,7 +75,6 @@ public class Table
 		else {
 			needsUpdate = true;
 			Debug.Log ("Creating new table grid list");
-			CreateObjects (ref scanners, ref needsUpdate);
 
 			this.grid = new List<Grid> ();
 			for (int i = 0; i < currIds.GetLength (0); i++) {
@@ -102,7 +90,6 @@ public class Table
 				}
 			}
 		}
-		return needsUpdate;
 	}
 
 	public void PrintGrid() {
@@ -118,45 +105,21 @@ public class Table
 	public int GetType(int index) {
 		return this.grid [index].type;
 	}
+		
 
-	/// <summary>
-	/// Populates the Table class' Objects with dock ID, slider values, etc from the Scanners class.
-	/// </summary>
-	/// <returns><c>true</c>, if objects was created, <c>false</c> otherwise.</returns>
-	/// <param name="table">Table.</param>
-	/// <param name="scannerParentName">Scanner parent name.</param>
-	/// <param name="needsUpdate">Needs update.</param>
-	private bool CreateObjects(ref Scanners scanners, ref bool needsUpdate) {
-		if (this.objects.density != null) {
-			UpdateDock (ref scanners);
-		}
-		else {
-			SetupObjects (ref scanners);
-			needsUpdate = true;
-		}
-		return true;
-	}
-
-	public void UpdateObjects(ref Scanners scanners) {
-		UpdateDock (ref scanners);
-		UpdateSlider (ref scanners);
-	}
-
-	private void UpdateDock(ref Scanners scanners) {
-		int newDockId = scanners.GetDockId ();
+	public void UpdateDock(int newDockId) {
 		if (newDockId != this.objects.dockID) {
 			this.objects.SetDockId (newDockId);
 		}
 	}
 
-	private void UpdateSlider(ref Scanners scanners) {
-		int newSliderVal = scanners.GetSliderValue();
+	public void UpdateSlider(int newSliderVal) {
 		if (newSliderVal != this.objects.slider1) {
 			this.objects.SetSlider (newSliderVal);
 		}
 	}
 
-	private void SetupObjects(ref Scanners scanners) {
+	private void SetupObjects() {
 		// Initialize with random densities
 		this.objects.density = new List<int>();
 		int buildingTypesCount = GameObject.Find ("CityScope").GetComponent<CityScopeVis> ().GetBuildingTypeCount ();
@@ -164,8 +127,6 @@ public class Table
 		for (int i = 0; i < buildingTypesCount; i++)
 			this.objects.density.Add((int)(UnityEngine.Random.Range(0f, 20f)));
 
-		this.objects.SetDockId (scanners.GetDockId());
-		this.objects.SetSlider (scanners.GetSliderValue());
 	}
 
 	public string WriteToJSON()

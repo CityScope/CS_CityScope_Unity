@@ -180,10 +180,15 @@ public class Scanners : MonoBehaviour
 		// Assign scanner colors
 		ScanColors();
 
+		// Update Table's currId store
+		Table.Instance.CreateGrid(ref currentIds);
+
 		// Update slider & dock readings
 		if (_enableUI) {
 			dock.UpdateDock();
 			slider.UpdateSlider ();
+			Table.Instance.UpdateDock (dock.GetDockId());
+			Table.Instance.UpdateSlider (slider.GetSliderValue ());
 		}
 
 		if (_debug)
