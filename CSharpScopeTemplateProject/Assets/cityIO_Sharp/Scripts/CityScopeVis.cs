@@ -169,20 +169,20 @@ public class CityScopeVis : MonoBehaviour {
 	/// <summary>
 	/// Updates the table if the given grid object changed or if the slider/ dock changed
 	/// </summary>
-	private void UpdateTable(bool uiChanged) {
+	private void UpdateTable() {
 		for (int i = 0; i < Table.Instance.grid.Count; i++) { // loop through list of all cells grid objects 
-			if ((Table.Instance.grid[i].ShouldUpdate() || uiChanged))
+			if ((Table.Instance.grid[i].ShouldUpdate()) || Table.Instance.NeedsUpdate())
 				UpdateGridObject(i);
 		}
 	}
 
 
-	public void DrawTable(bool uiChanged)
+	public void DrawTable()
 	{
 		if (_gridObjects == null)
 			SetupTable ();
 
-		UpdateTable (uiChanged);
+		UpdateTable ();
 	}
 
 	private void NameGridObject(int i) {

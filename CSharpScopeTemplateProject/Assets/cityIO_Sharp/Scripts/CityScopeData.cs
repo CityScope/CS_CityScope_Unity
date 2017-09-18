@@ -122,7 +122,7 @@ public class CityScopeData : MonoBehaviour
 				_oldData = _www.text; //new data has arrived from server 
 				Table.Instance.CreateFromJSON(_www.text); // get parsed JSON into Cells variable --- MUST BE BEFORE CALLING ANYTHING FROM CELLS!!
 				_newCityioDataFlag = true;
-				_visualization.DrawTable(uiChanged);
+				_visualization.DrawTable();
 				// prints last update time to console 
 				System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
 				var lastUpdateTime = epochStart.AddSeconds(System.Math.Round(Table.Instance.timestamp / 1000d)).ToLocalTime();
@@ -139,11 +139,11 @@ public class CityScopeData : MonoBehaviour
 		bool update = Table.Instance.NeedsUpdate();
 
 		_newCityioDataFlag = true;
-		if (Table.Instance.grid != null && (update || uiChanged)) {
+		if (Table.Instance.grid != null && (update)) {
 			EventManager.TriggerEvent ("updateData");
 			if (_sendData)
 				SendData ();
-			_visualization.DrawTable(uiChanged);
+			_visualization.DrawTable();
 		}
 
 		if (uiChanged)
@@ -189,7 +189,7 @@ public class CityScopeData : MonoBehaviour
 
 
 	public bool ShouldUpdateGrid(int index) {
-		return (Table.Instance.grid [index].ShouldUpdate() || uiChanged);
+		return (Table.Instance.grid [index].ShouldUpdate() || Table.Instance.NeedsUpdate());
 	}
 
 	/////////////////////////////////////////////////////////

@@ -17,6 +17,7 @@ public class Table
 
 	private Table() {
 		this.objects = new Objects ();
+		this.needsUpdate = true;
 
 		this.SetupObjects ();
 	}
@@ -39,12 +40,12 @@ public class Table
 	}
 
 	public bool NeedsUpdate() {
-		return needsUpdate;
+		return this.needsUpdate;
 	}
 
-	public Table CreateFromJSON(string jsonString)
+	public void CreateFromJSON(string jsonString)
 	{ // static function that returns Table which holds Class objects 
-		return JsonUtility.FromJson<Table>(jsonString);
+		_instance = JsonUtility.FromJson<Table>(jsonString);
 	}
 
 	/// <summary>
@@ -58,6 +59,7 @@ public class Table
 			return;
 
 		if (this.grid != null) {
+			needsUpdate = false;
 			for (int i = 0; i < currIds.GetLength (0); i++) {
 				for (int j = 0; j < currIds.GetLength (1); j++) {
 					int currType = this.grid [i * currIds.GetLength (1) + j].type;
@@ -110,12 +112,14 @@ public class Table
 	public void UpdateDock(int newDockId) {
 		if (newDockId != this.objects.dockID) {
 			this.objects.SetDockId (newDockId);
+			needsUpdate = true;
 		}
 	}
 
 	public void UpdateSlider(int newSliderVal) {
 		if (newSliderVal != this.objects.slider1) {
 			this.objects.SetSlider (newSliderVal);
+			needsUpdate = true;
 		}
 	}
 
