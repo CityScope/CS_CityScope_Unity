@@ -65,8 +65,6 @@ public class CityScopeData : MonoBehaviour
     /// flag to rise when new data arrives 
     /// </summary>
     public bool _newCityioDataFlag = false;
-	CityScopeVis _visualization;
-
 
 	private bool uiChanged = false;
     
@@ -75,7 +73,6 @@ public class CityScopeData : MonoBehaviour
 
 	void Awake() {
 		tableDataPost = new TableDataPost ();
-		_visualization = this.GetComponent<CityScopeVis> ();
 
 		// Listeners to update slider & dock values
 		EventManager.StartListening ("sliderChange", OnSliderChanged);
@@ -123,7 +120,7 @@ public class CityScopeData : MonoBehaviour
 				_oldData = _www.text; //new data has arrived from server 
 				Table.Instance.CreateFromJSON(_www.text); // get parsed JSON into Cells variable --- MUST BE BEFORE CALLING ANYTHING FROM CELLS!!
 				_newCityioDataFlag = true;
-				_visualization.DrawTable();
+				EventManager.TriggerEvent ("updateData");
 				// prints last update time to console 
 				System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
 				var lastUpdateTime = epochStart.AddSeconds(System.Math.Round(Table.Instance.timestamp / 1000d)).ToLocalTime();
@@ -144,7 +141,6 @@ public class CityScopeData : MonoBehaviour
 			EventManager.TriggerEvent ("updateData");
 			if (_sendData)
 				SendData ();
-			_visualization.DrawTable();
 		}
 
 		if (uiChanged)
@@ -156,8 +152,6 @@ public class CityScopeData : MonoBehaviour
 	/// </summary>
 	private void SendData() {
 		tableDataPost.jsonString = Table.Instance.WriteToJSON ();
-		//if (debug)
-		//	Debug.Log("tableDataPost.jsonString: " + tableDataPost.jsonString);
 
 		post = new WWW(postTableURL, tableDataPost.encoding.GetBytes(tableDataPost.jsonString), tableDataPost.header);
 

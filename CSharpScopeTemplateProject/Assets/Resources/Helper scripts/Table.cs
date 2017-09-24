@@ -15,13 +15,15 @@ public class Table
 	private bool needsUpdate;
 	private bool isInternal;
 
+	private int numBldgTypes = 6;
+
 
 	private Table() {
 		this.objects = new Objects ();
 		this.needsUpdate = true;
 		this.isInternal = false;
 
-		this.SetupObjects ();
+		this.SetupObjects (numBldgTypes);
 	}
 
 	public static Table Instance {
@@ -132,10 +134,10 @@ public class Table
 		}
 	}
 
-	private void SetupObjects() {
+	private void SetupObjects(int numBlgTypes) {
 		// Initialize with random densities
 		this.objects.density = new List<int>();
-		int buildingTypesCount = GameObject.Find ("CityScope").GetComponent<CityScopeVis> ().GetBuildingTypeCount ();
+		int buildingTypesCount = numBlgTypes;
 
 		for (int i = 0; i < buildingTypesCount; i++)
 			this.objects.density.Add((int)(UnityEngine.Random.Range(0f, 20f)));

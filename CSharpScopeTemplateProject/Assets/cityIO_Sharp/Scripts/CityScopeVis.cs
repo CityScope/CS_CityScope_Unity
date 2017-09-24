@@ -61,6 +61,8 @@ public class CityScopeVis : MonoBehaviour {
 		_tmpColor = Color.black;
 		height = 0f;
 		yPos = 0f;
+
+		EventManager.StartListening ("updateData", OnUpdateData);
 	}
 
 	/// <summary>
@@ -258,6 +260,10 @@ public class CityScopeVis : MonoBehaviour {
 		if (buildingTypes.Contains(Table.Instance.grid [index].type) && Table.Instance.objects.density != null)
 			return (int)((Table.Instance.objects.density [Table.Instance.grid [index].type] * _floorHeight) * 0.5f);
 		return -1;
+	}
+
+	public void OnUpdateData() {
+		DrawTable ();
 	}
 
 }
