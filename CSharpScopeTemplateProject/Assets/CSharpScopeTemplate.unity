@@ -8822,7 +8822,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: b5686ca37aade47fa9b31f4e2801dadc, type: 2}
+  - {fileID: 2100000, guid: f05f06e3975f94849a55ab9f0edd66ee, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9584,10 +9584,10 @@ MonoBehaviour:
   _delay: 1
   _postDelay: 1
   _sendData: 1
-  postTableURL: https://cityio.media.mit.edu/api/update/test
+  postTableURL: 'http://posttestserver.com/post.php '
   _tableName: 0
   _newCityioDataFlag: 0
-  debug: 0
+  debug: 1
 --- !u!4 &1877268380
 Transform:
   m_ObjectHideFlags: 0

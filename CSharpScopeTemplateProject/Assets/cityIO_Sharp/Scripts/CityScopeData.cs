@@ -156,6 +156,7 @@ public class CityScopeData : MonoBehaviour
     private void SendData()
     {
         tableDataPost.jsonString = Table.Instance.WriteToJSON();
+
         post = new WWW(postTableURL, tableDataPost.encoding.GetBytes(tableDataPost.jsonString), tableDataPost.header);
         StartCoroutine(WaitForWWW(post));
     }
