@@ -1,6 +1,7 @@
 # CSharpScope Template Project  
 
-### See wiki for details: https://github.com/RELNO/CSharpScope_TemplateProject/wiki
+### See wiki for details
+https://github.com/mitmedialab/CityScope_Unity_Template/wiki
 
 *** 
 [unity3D, c#, json]
