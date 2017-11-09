@@ -3,7 +3,7 @@
 ### See wiki for details: https://github.com/RELNO/CSharpScope_TemplateProject/wiki
 
 *** 
-[unity, c#, js, json]
+[unity3D, c#, json]
 
 CsharpScope are a set of tools allowing HCI interfaces for urban design, architecture, spatial analysis, transportation planning and more.  These tools allow quick start for Unity based development of interaction with tangible models, using projection mapping, cloud-based data, color-tagged object detection and more. This empty-shell project contains 3 main components for a barebone CityScope table:
 
