@@ -48,7 +48,7 @@ public class CityScopeData : MonoBehaviour
 
     [Header("If sending scanned data to server")]
     public bool _sendData;
-    public string postTableURL = "https://cityio.media.mit.edu/api/table/update/citymatrix";
+    public string postTableURL = "https://cityio.media.mit.edu/api/table/update/";
     private TableDataPost tableDataPost;
     ///<summary>
     /// table name list

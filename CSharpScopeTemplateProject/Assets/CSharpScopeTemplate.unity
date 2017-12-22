@@ -9584,7 +9584,7 @@ MonoBehaviour:
   _delay: 1
   _postDelay: 1
   _sendData: 1
-  postTableURL: 'http://posttestserver.com/post.php '
+  postTableURL: https://cityio.media.mit.edu/api/table/update/testUnity
   _tableName: 0
   _newCityioDataFlag: 0
   debug: 1
