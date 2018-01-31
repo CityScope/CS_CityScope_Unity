@@ -1,14 +1,14 @@
 ## Overview
 
 This is a barebone template project for MIT CityScope development in Unity environment. It provides all necessary components for designing a CS table that can scan, compute, share and project urban related simulations. This project is designed to so that each of the core components could run separately, without others dependency.    
-
+____
 # Setup
 
 ## Unity
 
 Download [Unity](https://unity3d.com/), clone, run
 Branches: master for Template, heatmap for Andorra
-
+___
 ## Displays & Environment
 
 ### Displays
@@ -20,7 +20,7 @@ Check that all textures are there (e.g. the image when there’s no webcam) and 
 
 **Webcam texture:** The texture is passed from the keystoned quad holding the live webcam stream to another quad that is used for the scanning via a RenderTexture that the Camera looking at the keystoned quad holds.
 **Projection-mapped texture: **This texture is coming from a RenderTexture assigned by a Camera looking at the 3D grid.
-
+____
 # Running the Template with Static Image
 
 The first run-through with the image already provided is just to help orient the users with the help of the UI in Display 1:
@@ -46,7 +46,7 @@ Under Webcam Settings, we can choose Use Webcam, which will display extra settin
 
 We can then click on Calibrate Colors under Color Settings--this is the part where we might need to exit the UI view (Display 1) and start looking at the object in the Scene. To begin, though, we can look at the Scanners or Colors views & see how the colors are sorted.
 ![](https://github.com/RELNO/CSharpScope_TemplateProject/blob/master/docs/Scanning_02.png?raw=true)
-
+_____
 # Color Calibration & Objects in the Scene
 ![](https://github.com/RELNO/CSharpScope_TemplateProject/blob/master/docs/Color3d_lines.png?raw=true)
 ![](https://github.com/RELNO/CSharpScope_TemplateProject/blob/master/docs/Color3D_03.png?raw=true)
@@ -69,17 +69,17 @@ We can click on each of these to see what kinds of objects they have.
 ## Colors in 3D
 
 Then, we can look at the 3D color space object & start calibrating colors by moving the spheres--this might be a little complicated at first, but we can try.
-
+_____
 # Example: Andorra
 
 
 Setup: checking out the heatmap branch & making sure nothing’s missing.
 We can check how cityIO can work without the other components & how data sending works.
-
+_____
 # Implementation Details
 
-
-More in-depth look at scanning, adding UI elements (physical UI), maybe cityIO, and discussing what still needs an update (e.g. heatmaps).
+____
+TBD: More in-depth look at scanning, adding UI elements (physical UI), maybe cityIO, and discussing what still needs an update (e.g. heatmaps).
 
 # Questions & Suggestions
 
