@@ -5,6 +5,3 @@
 
 
 Barebone template project for MIT CityScope development in Unity environment.
-
-### See wiki for details
-https://github.com/mitmedialab/CityScope_Unity_Template/wiki
