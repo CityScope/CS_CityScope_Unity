@@ -14,17 +14,19 @@ using System;
 
 
 // Class for posting JSON data
-public class TableDataPost {
-	public System.Text.UTF8Encoding encoding;
-	public Dictionary<string,string> header;
-	public string jsonString;
+public class TableDataPost
+{
+    public System.Text.UTF8Encoding encoding;
+    public Dictionary<string, string> header;
+    public string jsonString;
 
-	public TableDataPost() {
-		encoding = new System.Text.UTF8Encoding();
-		header = new Dictionary<string, string>();
-		header.Add("Content-Type", "text/plain");
-		jsonString = "";
-	}
+    public TableDataPost()
+    {
+        encoding = new System.Text.UTF8Encoding();
+        header = new Dictionary<string, string>();
+        header.Add("Content-Type", "text/plain");
+        jsonString = "";
+    }
 }
 public class cityIO : MonoBehaviour
 {
@@ -36,29 +38,29 @@ public class cityIO : MonoBehaviour
     private string _urlLocalHost = "http://localhost:8080//table/citymatrix";
 
     public enum DataSource { LOCALHOST = 0, REMOTE = 1, INTERNAL = 2 }; // select data stream source in editor
-	[Header("Source of grid data")]
+    [Header("Source of grid data")]
     public DataSource _dataSource = DataSource.INTERNAL;
-	///<summary>
-	/// data refresh rate in seconds 
-	/// </summary>
-	public float _delay;
-	public float _postDelay;
+    ///<summary>
+    /// data refresh rate in seconds 
+    /// </summary>
+    public float _delay;
+    public float _postDelay;
 
-	[Header("If sending scanned data to server")]
-	public bool _sendData;
-	public string postTableURL = "https://cityio.media.mit.edu/api/table/update/citymatrix";
-	private TableDataPost tableDataPost;
+    [Header("If sending scanned data to server")]
+    public bool _sendData;
+    public string postTableURL = "https://cityio.media.mit.edu/api/table/update/unitytest";
+    private TableDataPost tableDataPost;
     ///<summary>
     /// table name list
     /// </summary>
-    public enum TableName { _andorra = 0, _volpe = 1}; // select data stream source in editor
+    public enum TableName { _andorra = 0, _volpe = 1 }; // select data stream source in editor
 
-	[Header("If data source is remote or localhost:")]
+    [Header("If data source is remote or localhost:")]
     public TableName _tableName = TableName._volpe;
     private string _url;
-    
+
     private WWW _www;
-	private WWW post;
+    private WWW post;
 
     private string _oldData;
     ///<summary>
@@ -66,7 +68,7 @@ public class cityIO : MonoBehaviour
     /// </summary>
     public bool _newCityioDataFlag = false;
 
-	[Header("CityIO settings")]
+    [Header("CityIO settings")]
     ///<summary>
     /// real world size of cells in Meters 
     /// </summary>
@@ -89,7 +91,10 @@ public class cityIO : MonoBehaviour
     public Material _material;
     public Table _table;
 
-	private bool uiChanged = false;
+    private bool uiChanged = false;
+
+
+    [Header("Visual 3d Grid Settings")]
     /// <summary> 
     /// parent of grid GOs
     /// </summary>
@@ -98,38 +103,39 @@ public class cityIO : MonoBehaviour
     /// text mesh for type display 
     /// </summary>
     public GameObject textMeshPrefab;
-	private GameObject[] textMeshes;
-	public GameObject _textMeshParent;
+    private GameObject[] textMeshes;
+    public GameObject _textMeshParent;
 
-	private float textOffset = 20f;
+    private float textOffset = 20f;
     /// <summary> 
     /// list of types colors
     /// </summary>
     public Color[] colors;
 
-	private Color _tmpColor;
-	private float _gridCellYHeight;
-	private float _gridCellYPos;
-	private Vector3 gridObjectPosition;
-	private Vector3 gridObjectScale;
+    private Color _tmpColor;
+    private float _gridCellYHeight;
+    private float _gridCellYPos;
+    private Vector3 gridObjectPosition;
+    private Vector3 gridObjectScale;
 
 
     private int[] notBuildingTypes = new int[] { (int)Brick.INVALID, (int)Brick.MASK, (int)Brick.ROAD, (int)Brick.PARK, (int)Brick.AMENITIES, (int)Brick.STREET };
     private int[] buildingTypes = new int[] { (int)Brick.RL, (int)Brick.RM, (int)Brick.RS, (int)Brick.RL, (int)Brick.OL, (int)Brick.OM, (int)Brick.OS };
 
-	public bool debug = false;
+    public bool debug = false;
 
-	void Awake() {
-		_tmpColor = Color.black;
-		_gridCellYHeight = 0f;
-		_gridCellYPos = 0f;
-		_table = new Table();
-		tableDataPost = new TableDataPost ();
+    void Awake()
+    {
+        _tmpColor = Color.black;
+        _gridCellYHeight = 0f;
+        _gridCellYPos = 0f;
+        _table = new Table();
+        tableDataPost = new TableDataPost();
 
-		// Listeners to update slider & dock values
-		EventManager.StartListening ("sliderChange", OnSliderChanged);
-		EventManager.StartListening ("dockChange", OnDockChanged);
-	}
+        // Listeners to update slider & dock values
+        EventManager.StartListening("sliderChange", OnSliderChanged);
+        EventManager.StartListening("dockChange", OnDockChanged);
+    }
 
     IEnumerator Start()
     {
@@ -139,148 +145,156 @@ public class cityIO : MonoBehaviour
                 _url = _urlStart + _tableName.ToString();
             else if (_dataSource == DataSource.LOCALHOST)
                 _url = _urlLocalHost;
-			
+
             yield return new WaitForSeconds(_delay);
 
             // For JSON parsing
             if (_dataSource != DataSource.INTERNAL) // if table data is online 
             {
-				_www = new WWW(_url);
-				yield return _www;
-				UpdateTableFromUrl ();
+                _www = new WWW(_url);
+                yield return _www;
+                UpdateTableFromUrl();
             }
             else
-			{ // for app data 
-				UpdateTableInternal();
+            { // for app data 
+                UpdateTableInternal();
             }
         }
     }
 
-	/// <summary>
-	/// Updates the table with data read from URL.
-	/// </summary>
-	private void UpdateTableFromUrl() {
-		if (!string.IsNullOrEmpty(_www.error))
-		{
-			Debug.Log(_www.error); // use this for transfering to local server 
-		}
-		else
-		{
-			if (_www.text != _oldData)
-			{
-				_oldData = _www.text; //new data has arrived from server 
-				_table = Table.CreateFromJSON(_www.text); // get parsed JSON into Cells variable --- MUST BE BEFORE CALLING ANYTHING FROM CELLS!!
-				_newCityioDataFlag = true;
-				DrawTable();
-				// prints last update time to console 
-				System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
-				var lastUpdateTime = epochStart.AddSeconds(System.Math.Round(_table.timestamp / 1000d)).ToLocalTime();
-				print("CityIO new data has arrived." + '\n' + "JSON was created at: " + lastUpdateTime + '\n' + _www.text);
-			}
-		}
-	}
+    /// <summary>
+    /// Updates the table with data read from URL.
+    /// </summary>
+    private void UpdateTableFromUrl()
+    {
+        if (!string.IsNullOrEmpty(_www.error))
+        {
+            Debug.Log(_www.error); // use this for transfering to local server 
+        }
+        else
+        {
+            if (_www.text != _oldData)
+            {
+                _oldData = _www.text; //new data has arrived from server 
+                _table = Table.CreateFromJSON(_www.text); // get parsed JSON into Cells variable --- MUST BE BEFORE CALLING ANYTHING FROM CELLS!!
+                _newCityioDataFlag = true;
+                DrawTable();
+                // prints last update time to console 
+                System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
+                var lastUpdateTime = epochStart.AddSeconds(System.Math.Round(_table.timestamp / 1000d)).ToLocalTime();
+                print("CityIO new data has arrived." + '\n' + "JSON was created at: " + lastUpdateTime + '\n' + _www.text);
+            }
+        }
+    }
 
-	/// <summary>
-	/// Updates the table from the grid scanned internally in Unity.
-	/// </summary>
-	private void UpdateTableInternal() {
-		// Update UI values (slider, dock)
- 		if (uiChanged)
-			_table.UpdateObjectsFromDecoder ("ScannersParent");
+    /// <summary>
+    /// Updates the table from the grid scanned internally in Unity.
+    /// </summary>
+    private void UpdateTableInternal()
+    {
+        // Update UI values (slider, dock)
+        if (uiChanged)
+            _table.UpdateObjectsFromDecoder("ScannersParent");
 
-		// Update Grid values
-		bool update = _table.CreateGridFromDecoder("ScannersParent");
+        // Update Grid values
+        bool update = _table.CreateGridFromDecoder("ScannersParent");
 
-		_newCityioDataFlag = true;
-		if (_table.grid != null && (update || uiChanged)) {
-			EventManager.TriggerEvent ("updateData");
-			if (_sendData)
-				SendData ();
-			DrawTable();
-		}
+        _newCityioDataFlag = true;
+        if (_table.grid != null && (update || uiChanged))
+        {
+            EventManager.TriggerEvent("updateData");
+            if (_sendData)
+                SendData();
+            DrawTable();
+        }
 
-		if (uiChanged)
-			uiChanged = false;
-	}
+        if (uiChanged)
+            uiChanged = false;
+    }
 
-	/// <summary>
-	/// Sending Table data to server
-	/// </summary>
-	private void SendData() {
-		tableDataPost.jsonString = _table.WriteToJSON ();
-		//if (debug)
-		//	Debug.Log("tableDataPost.jsonString: " + tableDataPost.jsonString);
+    /// <summary>
+    /// Sending Table data to server
+    /// </summary>
+    private void SendData()
+    {
+        tableDataPost.jsonString = _table.WriteToJSON();
+        //if (debug)
+        //	Debug.Log("tableDataPost.jsonString: " + tableDataPost.jsonString);
 
-		post = new WWW(postTableURL, tableDataPost.encoding.GetBytes(tableDataPost.jsonString), tableDataPost.header);
+        post = new WWW(postTableURL, tableDataPost.encoding.GetBytes(tableDataPost.jsonString), tableDataPost.header);
+        StartCoroutine(WaitForWWW(post));
+    }
 
-		StartCoroutine(WaitForWWW(post));
-	}
+    /// <summary>
+    /// Coroutine for data posting to server
+    /// </summary>
+    /// <returns>The for WW.</returns>
+    /// <param name="www">Www.</param>
+    IEnumerator WaitForWWW(WWW www)
+    {
+        yield return new WaitForSeconds(_postDelay);
+        yield return www;
 
-	/// <summary>
-	/// Coroutine for data posting to server
-	/// </summary>
-	/// <returns>The for WW.</returns>
-	/// <param name="www">Www.</param>
-	IEnumerator WaitForWWW(WWW www)
-	{
-		yield return new WaitForSeconds(_postDelay);
-		yield return www;
-
-		string txt = "";
-		if (string.IsNullOrEmpty(www.error)) {
-			txt = www.text;  //text of success
-			if (debug)
-				Debug.Log ("jsonString: " + txt);
-			else
-				Debug.Log ("JSON posted.");
-		}
-		else {
-			txt = www.error;  //error
-			Debug.Log ("JSON post failed: " + txt);
-		}
-	}
+        string txt = "";
+        if (string.IsNullOrEmpty(www.error))
+        {
+            txt = www.text;  //text of success
+            if (debug)
+                Debug.Log("jsonString: " + txt);
+            else
+                Debug.Log("JSON posted.");
+        }
+        else
+        {
+            txt = www.error;  //error
+            Debug.Log("JSON post failed: " + txt);
+        }
+    }
 
 
-	public bool ShouldUpdateGrid(int index) {
-		return (_table.grid [index].ShouldUpdate() || uiChanged);
-	}
+    public bool ShouldUpdateGrid(int index)
+    {
+        return (_table.grid[index].ShouldUpdate() || uiChanged);
+    }
 
-	/// <summary>
-	/// Creates the grid object.
-	/// </summary>
-	/// <param name="i">The index.</param>
-	private void CreateGridObject(int i) {
-		/* make the grid cells in generic form */
-		_gridObjects[i] = GameObject.CreatePrimitive(PrimitiveType.Cube); //make cell cube 
-		_gridObjects[i].transform.parent = _gridHolder.transform; //put into parent object for later control
+    /// <summary>
+    /// Creates the grid object.
+    /// </summary>
+    /// <param name="i">The index.</param>
+    private void CreateGridObject(int i)
+    {
+        /* make the grid cells in generic form */
+        _gridObjects[i] = GameObject.CreatePrimitive(PrimitiveType.Cube); //make cell cube 
+        _gridObjects[i].transform.parent = _gridHolder.transform; //put into parent object for later control
 
-		gridObjectPosition = new Vector3((_table.grid[i].x * _cellSizeInMeters), 0, (_table.grid[i].y * _cellSizeInMeters));
-		gridObjectScale = new Vector3(cellShrink * _cellSizeInMeters, 0, cellShrink * _cellSizeInMeters);
+        gridObjectPosition = new Vector3((_table.grid[i].x * _cellSizeInMeters), 0, (_table.grid[i].y * _cellSizeInMeters));
+        gridObjectScale = new Vector3(cellShrink * _cellSizeInMeters, 0, cellShrink * _cellSizeInMeters);
 
-		// Objects properties 
-		_gridObjects[i].GetComponent<Renderer>().material = _material;
-		_gridObjects[i].transform.localPosition = gridObjectPosition; //compensate for scale shift due to height
-		_gridObjects[i].transform.localScale = gridObjectScale;
-		_gridObjects [i].SetActive (false);
+        // Objects properties 
+        _gridObjects[i].GetComponent<Renderer>().material = _material;
+        _gridObjects[i].transform.localPosition = gridObjectPosition; //compensate for scale shift due to height
+        _gridObjects[i].transform.localScale = gridObjectScale;
+        _gridObjects[i].SetActive(false);
 
-		AddBuildingTypeText (i, textOffset);
-	}
+        AddBuildingTypeText(i, textOffset);
+    }
 
-	private void SetGridObject(int i) {
-		// compensate for scale shift and x,y array
-		gridObjectPosition = new Vector3((_table.grid[i].x * _cellSizeInMeters), _gridCellYPos, (_table.grid[i].y * _cellSizeInMeters));
-		gridObjectScale = new Vector3(cellShrink * _cellSizeInMeters, _gridCellYHeight, cellShrink * _cellSizeInMeters);
+    private void SetGridObject(int i)
+    {
+        // compensate for scale shift and x,y array
+        gridObjectPosition = new Vector3((_table.grid[i].x * _cellSizeInMeters), _gridCellYPos, (_table.grid[i].y * _cellSizeInMeters));
+        gridObjectScale = new Vector3(cellShrink * _cellSizeInMeters, _gridCellYHeight, cellShrink * _cellSizeInMeters);
 
-		_gridObjects[i].transform.localPosition = gridObjectPosition;
-		_gridObjects[i].transform.localScale = gridObjectScale; // go through all 'densities' to match Type to Height
-		_gridObjects[i].GetComponent<Renderer>().material.color = _tmpColor;
-	}
+        _gridObjects[i].transform.localPosition = gridObjectPosition;
+        _gridObjects[i].transform.localScale = gridObjectScale; // go through all 'densities' to match Type to Height
+        _gridObjects[i].GetComponent<Renderer>().material.color = _tmpColor;
+    }
 
-	/// <summary>
-	/// Updates the grid object's height and scale given the current type.
-	/// </summary>
-	/// <param name="i">The index.</param>
-	    private void UpdateGridObject(int i)
+    /// <summary>
+    /// Updates the grid object's height and scale given the current type.
+    /// </summary>
+    /// <param name="i">The index.</param>
+    private void UpdateGridObject(int i)
     {
         if (buildingTypes.Contains(_table.grid[i].type)) //if this cell is one of the buildings types
         {
@@ -329,134 +343,146 @@ public class cityIO : MonoBehaviour
             _gridObjects[i].SetActive(true);
     }
 
-	private void NameGridObject(int i) {
-		if (_table.grid[i].type > (int)Brick.INVALID && _table.grid[i].type < (int)Brick.ROAD) //if object has is building with Z height
-		{
-			_gridObjects[i].name =
-				("Type: " + _table.grid[i].type + " X: " +
-					_table.grid[i].x.ToString() + " Y: " +
-					_table.grid[i].y.ToString() +
-					" Height: " + (_table.objects.density[_table.grid[i].type]).ToString());
-		}
-		else // if object is flat by nature
-		{
-			_gridObjects[i].name =
-				("Type w/o height: " + _table.grid[i].type + " X: " +
-					_table.grid[i].x.ToString() + " Y: " +
-					_table.grid[i].y.ToString());
-		}
-	}
+    private void NameGridObject(int i)
+    {
+        if (_table.grid[i].type > (int)Brick.INVALID && _table.grid[i].type < (int)Brick.ROAD) //if object has is building with Z height
+        {
+            _gridObjects[i].name =
+                ("Type: " + _table.grid[i].type + " X: " +
+                    _table.grid[i].x.ToString() + " Y: " +
+                    _table.grid[i].y.ToString() +
+                    " Height: " + (_table.objects.density[_table.grid[i].type]).ToString());
+        }
+        else // if object is flat by nature
+        {
+            _gridObjects[i].name =
+                ("Type w/o height: " + _table.grid[i].type + " X: " +
+                    _table.grid[i].x.ToString() + " Y: " +
+                    _table.grid[i].y.ToString());
+        }
+    }
 
-	/// <summary>
-	/// Creates array of gridobjects 
-	/// </summary>
-	private void SetupTable() {
-		_gridObjects = new GameObject[_table.grid.Count];
+    /// <summary>
+    /// Creates array of gridobjects 
+    /// </summary>
+    private void SetupTable()
+    {
+        _gridObjects = new GameObject[_table.grid.Count];
 
-		for (int i = 0; i < _table.grid.Count; i++) // loop through list of all cells grid objects 
-			CreateGridObject(i);
-	}
+        for (int i = 0; i < _table.grid.Count; i++) // loop through list of all cells grid objects 
+            CreateGridObject(i);
+    }
 
-	/// <summary>
-	/// Updates the table if the given grid object changed or if the slider/ dock changed
-	/// </summary>
-	private void UpdateTable() {
-		for (int i = 0; i < _table.grid.Count; i++) { // loop through list of all cells grid objects 
-			if ((_table.grid[i].ShouldUpdate() || uiChanged))
-				UpdateGridObject(i);
-		}
-	}
-		
+    /// <summary>
+    /// Updates the table if the given grid object changed or if the slider/ dock changed
+    /// </summary>
+    private void UpdateTable()
+    {
+        for (int i = 0; i < _table.grid.Count; i++)
+        { // loop through list of all cells grid objects 
+            if ((_table.grid[i].ShouldUpdate() || uiChanged))
+                UpdateGridObject(i);
+        }
+    }
+
     private void DrawTable()
     {
-		if (_gridObjects == null)
-			SetupTable ();
-		
-		UpdateTable ();
+        if (_gridObjects == null)
+            SetupTable();
+
+        UpdateTable();
     }
 
     private void AddBuildingTypeText(int i, float height) //mesh type text method 
     {
-		if (textMeshes == null) 
-			textMeshes = new GameObject[_table.grid.Count];
-		
-		textMeshes[i] = GameObject.Instantiate(textMeshPrefab, new Vector3((_gridObjects[i].transform.position.x),
-			height + _gridObjects[i].transform.localScale.y, _gridObjects[i].transform.position.z),
-			_gridObjects[i].transform.rotation, transform) as GameObject; //spwan prefab text
-		textMeshes[i].transform.parent = _textMeshParent.transform;
+        if (textMeshes == null)
+            textMeshes = new GameObject[_table.grid.Count];
 
-		Quaternion _tmpRot = textMeshes [i].transform.localRotation;
-		_tmpRot.eulerAngles = new Vector3(90, 0, 0.0f);
-		textMeshes [i].transform.localRotation = _tmpRot;
+        textMeshes[i] = GameObject.Instantiate(textMeshPrefab, new Vector3((_gridObjects[i].transform.position.x),
+            height + _gridObjects[i].transform.localScale.y, _gridObjects[i].transform.position.z),
+            _gridObjects[i].transform.rotation, transform) as GameObject; //spwan prefab text
+        textMeshes[i].transform.parent = _textMeshParent.transform;
 
-		textMeshes[i].GetComponent<TextMesh>().text = _table.grid[i].type.ToString();
-		textMeshes[i].GetComponent<TextMesh>().fontSize = 10; // 
-		textMeshes[i].GetComponent<TextMesh>().color = Color.gray;
-		textMeshes[i].GetComponent<TextMesh>().characterSize = 0.25f;
+        Quaternion _tmpRot = textMeshes[i].transform.localRotation;
+        _tmpRot.eulerAngles = new Vector3(90, 0, 0.0f);
+        textMeshes[i].transform.localRotation = _tmpRot;
 
-		textMeshes [i].SetActive (false);
+        textMeshes[i].GetComponent<TextMesh>().text = _table.grid[i].type.ToString();
+        textMeshes[i].GetComponent<TextMesh>().fontSize = 10; // 
+        textMeshes[i].GetComponent<TextMesh>().color = Color.gray;
+        textMeshes[i].GetComponent<TextMesh>().characterSize = 0.25f;
+
+        textMeshes[i].SetActive(false);
     }
 
-	private void UpdateBuildingTypeText(int i, bool enabled) {
-		if (enabled && _table.grid [i].type != (int)Brick.INVALID)
-			textMeshes [i].SetActive (true);
-		else
-			textMeshes [i].SetActive (false); 
-		textMeshes [i].GetComponent<TextMesh> ().text = Enum.GetName (typeof(Brick), (_table.grid [i].type));
-		float xPos = textMeshes [i].transform.localPosition.x;
-		float zPos = textMeshes [i].transform.localPosition.z;
-		textMeshes[i].transform.localPosition = new Vector3(xPos, _gridObjects[i].transform.localPosition.y + _gridObjects[i].transform.localScale.y * 0.5f, zPos);
-	}
+    private void UpdateBuildingTypeText(int i, bool enabled)
+    {
+        if (enabled && _table.grid[i].type != (int)Brick.INVALID)
+            textMeshes[i].SetActive(true);
+        else
+            textMeshes[i].SetActive(false);
+        textMeshes[i].GetComponent<TextMesh>().text = Enum.GetName(typeof(Brick), (_table.grid[i].type));
+        float xPos = textMeshes[i].transform.localPosition.x;
+        float zPos = textMeshes[i].transform.localPosition.z;
+        textMeshes[i].transform.localPosition = new Vector3(xPos, _gridObjects[i].transform.localPosition.y + _gridObjects[i].transform.localScale.y * 0.5f, zPos);
+    }
 
-	/////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////
-	/// 
-	/// GETTERS
-	/// 
-	/////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
+    /// 
+    /// GETTERS
+    /// 
+    /////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
 
-	public Color GetColor(int i) {
-		if (colors.Length > i)
-			return colors [i];
-		return Color.black;
-	}
+    public Color GetColor(int i)
+    {
+        if (colors.Length > i)
+            return colors[i];
+        return Color.black;
+    }
 
-	public int GetGridType(int index) {
-		return _table.grid [index].type;
-	}
+    public int GetGridType(int index)
+    {
+        return _table.grid[index].type;
+    }
 
-	public int GetFloorHeight(int index) {
-		if (_table.grid.Count <= index)
-			return -1;
-		if (buildingTypes.Contains(_table.grid [index].type) && _table.objects.density != null)
-			return (int)((_table.objects.density [_table.grid [index].type] * _floorHeight) * 0.5f);
-		return -1;
-	}
+    public int GetFloorHeight(int index)
+    {
+        if (_table.grid.Count <= index)
+            return -1;
+        if (buildingTypes.Contains(_table.grid[index].type) && _table.objects.density != null)
+            return (int)((_table.objects.density[_table.grid[index].type] * _floorHeight) * 0.5f);
+        return -1;
+    }
 
-	public int GetBuildingTypeCount() {
-		return (int) buildingTypes.Length;
-	}
+    public int GetBuildingTypeCount()
+    {
+        return (int)buildingTypes.Length;
+    }
 
-	public void SetDataSending(bool isSending) {
-		this._sendData = isSending;
-	}
+    public void SetDataSending(bool isSending)
+    {
+        this._sendData = isSending;
+    }
 
-	/////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////
-	/// 
-	/// EVENTS
-	/// 
-	/////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
+    /// 
+    /// EVENTS
+    /// 
+    /////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
 
-	public void OnSliderChanged() {
-		uiChanged = true;
-	}
+    public void OnSliderChanged()
+    {
+        uiChanged = true;
+    }
 
-	public void OnDockChanged() {
-		uiChanged = true;
-	}
+    public void OnDockChanged()
+    {
+        uiChanged = true;
+    }
 }
 
 
