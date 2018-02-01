@@ -1,12 +1,14 @@
-# CSharpScope Template Project  
+# CSharpScope Template Project
 
-### See wiki for details: https://github.com/RELNO/CSharpScope_TemplateProject/wiki
+<img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Mit_medialab_logo.png" width="100">
+<img src="https://dam-prod.media.mit.edu/thumb/2016/10/19/IMG_2445.jpg.1400x1400.jpg" width="600">
 
-*** 
-[unity, c#, js, json]
 
-CsharpScope are a set of tools allowing HCI interfaces for urban design, architecture, spatial analysis, transportation planning and more.  These tools allow quick start for Unity based development of interaction with tangible models, using projection mapping, cloud-based data, color-tagged object detection and more. This empty-shell project contains 3 main components for a barebone CityScope table:
+Barebone template project for MIT CityScope development in Unity environment.
 
-1. Scanning module [GridDecoder]
-2. Data viz of scanned table [CityIO_Unity]
-3. Projection mapping [PrjMap]
+
+
+
+[See Wiki for installation and setup](https://github.com/CityScope/CSharpScope_Template/blob/master/wiki.md)
+---
+Maintained by [Ariel Noyman](arielnoyman.com)
