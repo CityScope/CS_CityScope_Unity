@@ -88,6 +88,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaDirect: 0.5
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
+    m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -1885,7 +1886,7 @@ MonoBehaviour:
   _sliderRange: 30
   _refreshRate: 1
   _scannerScale: 0.012
-  _useWebcam: 0
+  _useWebcam: 1
   _showRays: 0
   _debug: 0
   _isCalibrating: 0
@@ -9581,9 +9582,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dataSource: 2
-  _delay: 1
+  _delay: 0.2
   _postDelay: 1
-  _sendData: 1
+  _sendData: 0
   postTableURL: https://cityio.media.mit.edu/api/table/update/testUnity
   _tableName: 0
   _newCityioDataFlag: 0
