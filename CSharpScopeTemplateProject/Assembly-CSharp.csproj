@@ -51,23 +51,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\cityIO_Sharp\Scripts\CityScopeData.cs" />
-     <Compile Include="Assets\cityIO_Sharp\Scripts\CityScopeVis.cs" />
-     <Compile Include="Assets\cityIO_Sharp\Scripts\JSONclass.cs" />
-     <Compile Include="Assets\GridDecoderAssets\Scripts\ColorClassifier.cs" />
-     <Compile Include="Assets\GridDecoderAssets\Scripts\Dock.cs" />
-     <Compile Include="Assets\GridDecoderAssets\Scripts\JsonParser.cs" />
-     <Compile Include="Assets\GridDecoderAssets\Scripts\KeystoneController.cs" />
-     <Compile Include="Assets\GridDecoderAssets\Scripts\LegoUI.cs" />
-     <Compile Include="Assets\GridDecoderAssets\Scripts\ResetScene.cs" />
-     <Compile Include="Assets\GridDecoderAssets\Scripts\Scanners.cs" />
-     <Compile Include="Assets\GridDecoderAssets\Scripts\Slider.cs" />
-     <Compile Include="Assets\GridDecoderAssets\Scripts\Webcam.cs" />
-     <Compile Include="Assets\Resources\Helper scripts\CameraControl.cs" />
-     <Compile Include="Assets\Resources\Helper scripts\EventManager.cs" />
-     <Compile Include="Assets\Resources\Helper scripts\Table.cs" />
-     <Compile Include="Assets\Resources\Helper scripts\ViewManager.cs" />
-     <None Include="Assets\GridDecoderAssets\Shaders\Affine UV fix.shader" />
+     <Compile Include="Assets\cityIO\Scripts\CityScopeData.cs" />
+     <Compile Include="Assets\cityIO\Scripts\CityScopeVis.cs" />
+     <Compile Include="Assets\cityIO\Scripts\JSONclass.cs" />
+     <Compile Include="Assets\Helper scripts\EventManager.cs" />
+     <Compile Include="Assets\Helper scripts\Table.cs" />
+     <Compile Include="Assets\scanner\Scripts\ColorClassifier.cs" />
+     <Compile Include="Assets\scanner\Scripts\Dock.cs" />
+     <Compile Include="Assets\scanner\Scripts\JsonParser.cs" />
+     <Compile Include="Assets\scanner\Scripts\KeystoneController.cs" />
+     <Compile Include="Assets\scanner\Scripts\LegoUI.cs" />
+     <Compile Include="Assets\scanner\Scripts\ResetScene.cs" />
+     <Compile Include="Assets\scanner\Scripts\Scanners.cs" />
+     <Compile Include="Assets\scanner\Scripts\Slider.cs" />
+     <Compile Include="Assets\scanner\Scripts\Webcam.cs" />
+     <None Include="Assets\scanner\Shaders\Affine UV fix.shader" />
  <Reference Include="UnityEditor.TestRunner">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/TestRunner/Editor/UnityEditor.TestRunner.dll</HintPath>
  </Reference>
