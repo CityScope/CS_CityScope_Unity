@@ -1,3 +1,8 @@
+# CSharpScope Template Project 
+_____
+**Note: For lean version including only [1]Lego scanner and [2]cityIO poster/getter, set to this branch: 
+https://github.com/CityScope/CS_CSharpScope_Template/tree/DEVELOPMENT_2018**
+_____
 ## Overview
 
 This is a barebone template project for MIT CityScope development in Unity environment. It provides all necessary components for designing a CS table that can scan, compute, share and project urban related simulations. This project is designed to so that each of the core components could run separately, without others dependency.    
