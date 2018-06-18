@@ -18,5 +18,5 @@ Developed by [Dalma Foldesi](https://github.com/foldalm),
 
 -----
 
-Maintained by [Ariel Noyman](arielnoyman.com)
+[Contributors](https://github.com/CityScope/CS_CityScope_Unity/graphs/contributors)
 
