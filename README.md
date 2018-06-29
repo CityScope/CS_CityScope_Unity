@@ -12,5 +12,7 @@ Barebone template project for MIT CityScope development in Unity environment.
 [See Wiki for installation and setup](https://github.com/CityScope/CSharpScope_Template/blob/master/wiki.md)
 ---
 
-[Contributors](https://github.com/CityScope/CS_CityScope_Unity/graphs/contributors)
+Maintained by [Ariel Noyman](http://arielnoyman.com)
+
+[Repo contributors](https://github.com/CityScope/CS_CityScope_Unity/graphs/contributors)
 
