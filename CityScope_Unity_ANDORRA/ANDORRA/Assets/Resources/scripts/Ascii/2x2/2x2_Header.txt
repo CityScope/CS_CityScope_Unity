@@ -1,0 +1,3 @@
+ncols         190
+nrows         120
+cellsize      17,330665643078

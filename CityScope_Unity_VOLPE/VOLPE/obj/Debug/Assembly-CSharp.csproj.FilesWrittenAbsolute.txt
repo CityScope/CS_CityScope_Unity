@@ -1,0 +1,17 @@
+/Users/noyman/GIT/CSharpScope Volpe/Temp/bin/Debug/UnityEngine.dll
+/Users/noyman/GIT/CSharpScope Volpe/Temp/bin/Debug/UnityEditor.dll
+/Users/noyman/GIT/CSharpScope Volpe/Temp/bin/Debug/UnityEngine.UI.dll
+/Users/noyman/GIT/CSharpScope Volpe/Temp/bin/Debug/UnityEngine.Networking.dll
+/Users/noyman/GIT/CSharpScope Volpe/Temp/bin/Debug/UnityEngine.PlaymodeTestsRunner.dll
+/Users/noyman/GIT/CSharpScope Volpe/Temp/bin/Debug/UnityEngine.Analytics.dll
+/Users/noyman/GIT/CSharpScope Volpe/Temp/bin/Debug/UnityEngine.HoloLens.dll
+/Users/noyman/GIT/CSharpScope Volpe/Temp/bin/Debug/UnityEngine.VR.dll
+/Users/noyman/GIT/CSharpScope Volpe/Temp/bin/Debug/Mono.Cecil.dll
+/Users/noyman/GIT/CSharpScope Volpe/Temp/bin/Debug/Unity.SerializationLogic.dll
+/Users/noyman/GIT/CSharpScope Volpe/Temp/bin/Debug/Unity.DataContract.dll
+/Users/noyman/GIT/CSharpScope Volpe/Temp/bin/Debug/ICSharpCode.NRefactory.dll
+/Users/noyman/GIT/CSharpScope Volpe/Temp/bin/Debug/Unity.UNetWeaver.dll
+/Users/noyman/GIT/CSharpScope Volpe/Temp/bin/Debug/Unity.UNetWeaver.dll.mdb
+/Users/noyman/GIT/CSharpScope Volpe/Temp/bin/Debug/Unity.CecilTools.dll
+/Users/noyman/GIT/CSharpScope Volpe/Temp/bin/Debug/Mono.Cecil.Pdb.dll
+/Users/noyman/GIT/CSharpScope Volpe/Temp/bin/Debug/Mono.Cecil.Mdb.dll
