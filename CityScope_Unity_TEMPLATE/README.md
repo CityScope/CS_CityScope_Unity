@@ -36,18 +36,18 @@ The first run-through with the image already provided is just to help orient the
 ## Views
 
 We can start with the Camera view showing the image of the grid, then the Scanners view showing the scanner objects with their color assignment, then the Projection view with the output (table) image.
-![](docs/Scanning_01.png?raw=true)
+![](DOCS/Scanning_01.png?raw=true)
 
 ## Keystoning
 
-![](docs/KeystoneUI.png?raw=true)
+![](DOCS/KeystoneUI.png?raw=true)
 Landing on the Projection view, we can toggle the keystone mode to calibrate the projection quad. We can then test saving & loading the configuration we have, as well as switch to the camera view & keystone that object.
 
 ## Scanners
 
 We can also click on Calibrate Scanners here to modify their size/ placement etc.
-![](docs/CameraKeystone_01.png?raw=true)
-![](docs/CameraKeystone_02.png?raw=true)
+![](DOCS/CameraKeystone_01.png?raw=true)
+![](DOCS/CameraKeystone_02.png?raw=true)
 
 ## Using webcam input
 
@@ -56,13 +56,13 @@ Under Webcam Settings, we can choose Use Webcam, which will display extra settin
 ## Color calibration
 
 We can then click on Calibrate Colors under Color Settings--this is the part where we might need to exit the UI view (Display 1) and start looking at the object in the Scene. To begin, though, we can look at the Scanners or Colors views & see how the colors are sorted.
-![](docs/Scanning_02.png?raw=true)
+![](DOCS/Scanning_02.png?raw=true)
 
 # Color Calibration & Objects in the Scene
 
-![](docs/Color3d_lines.png?raw=true)
-![](docs/Color3D_03.png?raw=true)
-![](docs/Color3d_01.png?raw=true)
+![](DOCS/Color3d_lines.png?raw=true)
+![](DOCS/Color3D_03.png?raw=true)
+![](DOCS/Color3d_01.png?raw=true)
 
 ## Finding objects in the Scene
 

@@ -6,13 +6,10 @@ This is a Unity based urban simulation portion of CityScope Andorra.
 
 ### Running CSharpScope Andorra
 
-Run Unity (get Unity latest build).
-
-Open `CSharpScope Andorra` project (if not starting automatically).
-
-Then, press Play [cmd+P or ctrl+P].
-
-A gameview window should pop. Detach the window and run the app in fullscreen mode.
+- Run Unity (get Unity latest build).
+- Open `CSharpScope Andorra` project (if not starting automatically).
+- Then, press Play [cmd+P or ctrl+P]. A gameview window should pop.
+- Detach the window and run the app in fullscreen mode.
 
 ### Running Scanning / Projection Mapping / Table Mode Integration
 
