@@ -7,9 +7,11 @@ Repo contains:
 
 - `CityScope_Unity_ANDORRA` Unity based urban simulation for CityScope Andorra [2017]
 
+- `CityScope_Unity_TONGJI` Visualization and hot-spots simulation for Tongji CSL in Shanghai [2017]
+
 - `CityScope_Unity_VOLPE` Visualization for MIT Volpe project [2016]
 
-- `CityScope_Unity_TONGJI` Visualization and hot-spots simulation for Tongji CSL in Shanghai [2017]
+- `CityScope_Unity_BRT` Street-section agent based simulation for the City Of Boston & Barr Foundation BRT Project [2015]
 
 Maintained by [Ariel Noyman](arielnoyman.com)
 
